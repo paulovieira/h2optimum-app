@@ -262,11 +262,20 @@ let View = Mn.View.extend({
             internals.response = response;
             for (let i = 0; i < internals.response.length; i++) {
                 ts.push(new Date(internals.response[i].ts));
-                data1.push(i)
-                data2.push(i + 10)
-                //internals.response[i].timestamp = d.getTime();
-                //internals.response[i].time = Fecha.format(d, 'dddd, DD-MMM HH:mm:ss')
-                //delete internals.response[i].ts;
+
+                if (window.h2optimum.isProduction ) {
+                    if (internals.response[i].sid === 1 && internals.response[i].device_id === 'f8:f0:05:f7:df:1f') {
+                        data1.push(internals.response[i].val);
+                    }
+
+                    if (internals.response[i].sid === 1 && internals.response[i].device_id === 'f8:f0:05:f5:e0:6e') {
+                        data2.push(internals.response[i].val);
+                    }                    
+                }
+                else {
+                    data1.push(internals.response[i].val);
+                }
+
             }
 
             ts.unshift('ts');
