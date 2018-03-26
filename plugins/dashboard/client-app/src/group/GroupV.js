@@ -265,11 +265,11 @@ let View = Mn.View.extend({
 
                 if (window.h2optimum.isProduction ) {
                     debugger
-                    if (internals.response[i].sid === 1 && internals.response[i].device_id === 'f8:f0:05:f7:df:1f') {
+                    if (internals.response[i].sid === 2 && internals.response[i].device_id === 'f8:f0:05:f7:df:1f') {
                         data1.push(internals.response[i].val);
                     }
 
-                    if (internals.response[i].sid === 1 && internals.response[i].device_id === 'f8:f0:05:f5:e0:6e') {
+                    if (internals.response[i].sid === 2 && internals.response[i].device_id === 'f8:f0:05:f5:e0:6e') {
                         data2.push(internals.response[i].val);
                     }                    
                 }
