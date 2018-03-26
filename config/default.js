@@ -16,7 +16,7 @@ internals.rootDir = Path.resolve(__dirname, '..');
 module.exports = {
 
     rootDir: internals.rootDir,
-    applicationTitle: 'h2optimum-api',
+    applicationTitle: 'h2optimum-app',
     port: '',
     publicUrl: '',
 

@@ -1,5 +1,5 @@
 {
-  "name": "h2optimum-api",
+  "name": "h2optimum-app",
   "script": "./index.js",
   "args": [
     "--production"
