@@ -1,4 +1,5 @@
 let $ = require('jquery');
+let Q = require('q');
 let Backbone = require('backbone');
 let Mn = require('backbone.marionette');
 var Radio = require('backbone.radio');
@@ -65,8 +66,8 @@ let View = Mn.View.extend({
     onAttach: function() {
 
         this.createDatepicker();
-        let initialToDate = DateFns.startOfToday();
-        let initialFromDate = DateFns.subDays(initialToDate, 3);
+        let initialToDate = internals.initialToDate = DateFns.startOfToday();
+        let initialFromDate = internals.initialFromDate = DateFns.subDays(initialToDate, 4);
 
         Radio.channel('dates').request('set', [initialFromDate, initialToDate]);
     },
@@ -202,24 +203,96 @@ let View = Mn.View.extend({
 
     },
 
+    
+    getReadings: function () {
+
+        let currentDates = Radio.channel('dates').request('get');
+        let period = DateFns.differenceInHours(internals.initialToDate, internals.initialFromDate)
+        let domain = window.h2optimum.isProduction ? 'http://api.2adapt.pt' : 'http://localhost:8000';
+
+        return Q($.ajax({
+            type: 'GET',
+            //url: '/v1/get-readings',
+            url: domain + '/v1/get-readings',
+            data: {
+                period: period
+            },
+        }))
+
+    },
+    
+
     refreshBillboardChart: function() {
 
         var ts = this.generateTs();
-        var xTick = this.getXTick()
-        var centro1 = this.generateMeasurements(ts, 0);
-        var centro2 = this.generateMeasurements(ts, 1);
+        ts.unshift('ts');
+
+        var xTick = this.getXTick();
+
+        let data1 = ts.map(date => null)
+        let data2 = ts.map(date => null)
+
+        data1.unshift('f8:f0:05:f7:df:1f')
+        data2.unshift('f8:f0:05:f5:e0:6e')
+        
+
+        //let currentDates = Radio.channel('dates').request('get');
+        //xxx
+
+        /*
         var centro3 = this.generateMeasurements(ts, 3);
         var poco1 = this.generateMeasurements(ts, 0.2);
         var poco2 = this.generateMeasurements(ts, 0.5);
         var poco3 = this.generateMeasurements(ts, 1.5);
 
-        ts.unshift('ts');
-        centro1.unshift('Centro 1');
-        centro2.unshift('Centro 2');
+
+
         centro3.unshift('Centro 3');
         poco1.unshift('Poço 1');
         poco2.unshift('Poço 2');
         poco3.unshift('Poço 3');
+*/
+        // hardcoded
+        Q(this.getReadings()).then(response =>{ 
+//debugger
+            let ts = [];
+            let data1 = [];
+            let data2 = [];
+
+            internals.response = response;
+            for (let i = 0; i < internals.response.length; i++) {
+                ts.push(new Date(internals.response[i].ts));
+                data1.push(i)
+                data2.push(i + 10)
+                //internals.response[i].timestamp = d.getTime();
+                //internals.response[i].time = Fecha.format(d, 'dddd, DD-MMM HH:mm:ss')
+                //delete internals.response[i].ts;
+            }
+
+            ts.unshift('ts');
+            data1.unshift('f8:f0:05:f7:df:1f')
+            data2.unshift('f8:f0:05:f5:e0:6e')
+//debugger
+            this.chart.load({
+                columns: [
+                    ts,
+                    data1,
+                    data2
+                ]
+            })
+            
+        })
+
+        // setTimeout(() => {
+
+        //     this.chart.load({
+        //         columns: [
+        //             ['Centro 1', 1, 2, 3, 4]
+        //         ]
+        //     })
+        // }, 1000)
+
+
 /*
         var tsGrid = ts.map((dateStr, i) => { 
 
@@ -237,20 +310,20 @@ let View = Mn.View.extend({
                 x: "ts",
                 columns: [
                     ts,
-                    centro1,
-                    centro2,
-                    centro3,
-                    poco1,
-                    poco2,
-                    poco3,
+                    data1,
+                    data2,
+                    // centro3,
+                    // poco1,
+                    // poco2,
+                    // poco3,
                 ],
                 types: {
-                    'centro1': 'line',
-                    'centro2': 'line',
-                    'centro3': 'line',
-                    'poco1': 'line',
-                    'poco2': 'line',
-                    'poco3': 'line',
+                    'data1': 'line',
+                    'data2': 'line',
+                    // 'centro3': 'line',
+                    // 'poco1': 'line',
+                    // 'poco2': 'line',
+                    // 'poco3': 'line',
                 },
                 /*
                 classes: {
@@ -343,7 +416,7 @@ let View = Mn.View.extend({
 
             tooltip: {
                 format: {
-                    title: date => DateFns.format(date, 'dddd, D/MMM/YYYY HH:mm'),
+                    title: date => DateFns.format(date, 'dddd, D/MMM/YYYY HH:mm:ss'),
                     value: value => { if(value == null){ debugger} return value.toFixed(1) },
                 }
             },
@@ -382,19 +455,21 @@ let View = Mn.View.extend({
 
     generateMeasurements: function (ts, index) {
 
-        let n = 24 * (60 / internals.measurementPeriodInMinutes)
-        let array = ts.map((date, i) => {
+        // let n = 24 * (60 / internals.measurementPeriodInMinutes)
+        // let array = ts.map((date, i) => {
 
-            //return Math.random() * 10;
-            let hours = DateFns.getHours(date)
-            if ((hours >= 22 || hours <= 5) && Math.random() >= 0.6) {
-                return null;
-            }
+        //     //return Math.random() * 10;
+        //     let hours = DateFns.getHours(date)
+        //     if ((hours >= 22 || hours <= 5) && Math.random() >= 0.6) {
+        //         return null;
+        //     }
 
-            return Math.cos((2 * Math.PI / n) * (i % n)) + Math.random() * 1 + index + 10;
-        });
+        //     return Math.cos((2 * Math.PI / n) * (i % n)) + Math.random() * 1 + index + 10;
+        // });
 
-        return array;
+        // return array;
+        //return [null, null, null, null, null, ]
+        return [2, 2, 2, 2, 2, ]
     },
 
     getXTick: function () {

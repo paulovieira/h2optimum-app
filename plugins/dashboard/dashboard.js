@@ -68,12 +68,7 @@ exports.register = function(server, options, next){
 
             let templateFile = 'templates/dashboard.html';
             let ctx = {
-                title: 'hello ' + request.server.version,
-                message: 'Index - Hello World!',
-                data: {
-                    x: 123,
-                    y: 456
-                }
+                isProduction: !!Config.get('production'),
             };
 
             reply.view(templateFile, {
