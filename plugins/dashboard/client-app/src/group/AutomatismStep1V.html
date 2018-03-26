@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-sm-12">
+    
+    Trigger source: 
+
+    <select class="show-tick selectpicker form-control form-control-sm" data-width="fit" data-id="trigger-source">
+      <option value="" disabled selected>select source</option>
+      <option value="trigger-1">Water potential measurements</option>
+      <option value="trigger-2">Irrigation controller</option>
+      <option value="trigger-3" disabled>Rain forecast</option>
+    </select>
+  </div>
+</div>
+
+
+<div style="display: none;" class="row" data-id="trigger-1">
+  <div class="col-sm-12">
+      
+    <form class="form-inline">
+
+      <div class="form-check mr-sm-2">
+        <label class="form-check-label">
+          Water potential value is
+        </label>
+      </div>
+
+      <select class="show-tick selectpicker form-control form-control-sm mr-sm-2" data-width="fit" data-id="trigger-1-option-1">
+        <option value="" disabled selected>select option</option>
+        <option value="greater-than">&gt;</option>
+        <option value="less-than">&lt;</option>
+      </select>
+
+      <div class="form-check mr-sm-2">
+        <label class="form-check-label">
+          than
+        </label>
+      </div>
+
+      <input type="text" class="form-control form-control-sm mr-sm-2" id="trigger-1-option-2" placeholder="insert WP value...">
+
+      <div class="form-check mr-sm-2">
+        <label class="form-check-label">
+          during the last
+        </label>
+      </div>
+
+      <select class="show-tickx selectpicker form-control form-control-sm mr-sm-2"  data-width="fit" data-id="trigger-1-option-3">
+        <option value="3">3</option>
+        <option value="6" selected>6</option>
+        <option value="12">12</option>
+        <option value="24">24</option>
+        <option value="36">36</option>
+      </select>
+
+      <div class="form-check mr-sm-2">
+        <label class="form-check-label">
+          hours
+        </label>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<div style="display: none;" class="row" data-id="trigger-2">
+  <div class="col-sm-12">
+      
+      Trigger 2 details
+  </div>
+</div>
+
+<div style="display: none;" class="row" data-id="trigger-3">
+  <div class="col-sm-12">
+      
+      Trigger 3 details
+  </div>
+</div>
+

@@ -1,0 +1,180 @@
+
+        <!-- Preloader -->
+        <div class="preloader">
+          <div class="spinner-dots">
+            <span class="dot1"></span>
+            <span class="dot2"></span>
+            <span class="dot3"></span>
+          </div>
+        </div>
+
+
+
+        <!-- Sidebar -->
+        <aside class="sidebar sidebar-icons-right sidebar-icons-boxed sidebar-expand-lg">
+          <header class="sidebar-header xtext-center bg-info" style="display: block;">
+
+             <h2 class="center-vh ls-2 fw-300" style="margin: 0; padding: 0; color: white; text-transform: uppercase;">H2Optimum</h2>
+            <!--
+            <a class="logo-icon" href="../index.html"><img src="../assets/img/logo-icon-light.png" alt="logo icon"></a>
+            <span class="logo">
+              <a href="../index.html"><img src="../assets/img/logo-light.png" alt="logo"></a>
+            </span>
+            <span class="sidebar-toggle-fold"></span>
+            -->
+          </header>
+
+          <nav class="sidebar-navigation">
+            <ul class="menu">
+
+              <li class="menu-item">
+                <a class="menu-link" href="#/dashboard">
+                  <span class="icon fa fa-home"></span>
+                  <span class="title">Dashboard</span>
+                </a>
+              </li>
+
+              <li class="menu-item">
+                <a class="menu-link" href="#">
+                  <span class="icon fa fa-tint"></span>
+                  <span class="title">Groups</span>
+                  <span class="arrow"></span>
+                </a>
+
+                <ul class="menu-submenu">
+                  <li class="menu-item">
+                    <a class="menu-link" href="#/groups/permalab">
+                      <span class="icon">PL</span>
+                      <span class="title">Permalab</span>
+                    </a>
+                  </li>
+
+                  <li class="menu-item">
+                    <a class="menu-link" href="#/groups/milho-1">
+                      <span class="icon">M1</span>
+                      <span class="title">Milho 1</span>
+                    </a>
+                  </li>
+
+                  <li class="menu-item">
+                    <a class="menu-link" href="#/groups/milho-2">
+                      <span class="icon">M2</span>
+                      <span class="title">Milho 2</span>
+                    </a>
+                  </li>
+
+                  <li class="menu-item">
+                    <a class="menu-link" href="#/groups/pomar">
+                      <span class="icon">PMR</span>
+                      <span class="title">Pomar</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+
+
+
+              <li class="menu-item">
+                <a class="menu-link" href="#">
+                  <span class="icon fa fa-cog"></span>
+                  <span class="title">Settings</span>
+                </a>
+              </li>
+
+
+              
+
+              <li class="menu-divider"></li>
+
+              <li class="menu-item">
+                <a class="menu-link" href="#">
+                  <span class="icon fa fa-question-circle"></span>
+                  <span class="title">Help</span>
+                </a>
+                {#
+                <ul class="menu-submenu">
+                  <li class="menu-item">
+                    <a class="menu-link" href="#">
+                      <span class="icon fa fa-book"></span>
+                      <span class="title">Articles</span>
+                    </a>
+                  </li>
+
+                  <li class="menu-item">
+                    <a class="menu-link" href="#">
+                      <span class="icon fa fa-file-text-o"></span>
+                      <span class="title">FAQ</span>
+                    </a>
+                  </li>
+
+                </ul>
+                #}
+              </li>
+
+
+            </ul>
+          </nav>
+
+        </aside>
+        <!-- END Sidebar -->
+
+
+
+        <!-- Topbar -->
+        <header class="topbar">
+          <div class="topbar-left">
+          {#
+
+                          <span class="topbar-btn sidebar-toggler"><i>&#9776;</i></span>
+
+
+                          <!--
+                          <div class="topbar-divider d-none d-md-block"></div>
+                          -->
+
+                          <div class="lookup d-none d-md-block topbar-search" id="theadmin-search">
+                            <input class="form-control w-300px" type="text">
+                            <div class="lookup-placeholder">
+                              <i class="ti-search"></i>
+                              <span><strong>Try</strong> button, slider, modal, etc.</span>
+                            </div>
+                          </div>
+
+          #}
+          </div>
+
+          <div class="topbar-right">
+
+
+            <ul class="topbar-btns">
+              <li class="dropdown">
+                <span class="topbar-btn" data-toggle="dropdown"><img class="avatar" src="/static/img/avatar1.jpg" alt="..."></span>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="../page/profile.html"><i class="ti-user"></i> Profile</a>
+                  <a class="dropdown-item" href="../page-app/mailbox.html">
+                    <div class="flexbox">
+                      <i class="ti-email"></i>
+                      <span class="flex-grow">Notifications</span>
+                      <span class="badge badge-pill badge-info">5</span>
+                    </div>
+                  </a>
+
+                  <!-- <div class="dropdown-divider"></div> -->
+                  <!-- <a class="dropdown-item" href="../page-extra/user-lock-1.html"><i class="ti-lock"></i> Lock</a> -->
+                  <a class="dropdown-item" href="../page-extra/user-login-3.html"><i class="ti-power-off"></i> Logout</a>
+                </div>
+              </li>
+
+
+            </ul>
+
+          </div>
+        </header>
+        <!-- END Topbar -->
+
+
+
+        {# note that the [data-region-id="for-main-container"] element will be removed because we use the 'replaceElement' option #}
+        <div data-region-id="for-main-container"></div>
+

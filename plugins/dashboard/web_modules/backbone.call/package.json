@@ -1,0 +1,54 @@
+{
+  "_from": "github:paulovieira/backbone.call",
+  "_id": "backbone.call@0.0.1",
+  "_inBundle": false,
+  "_integrity": "sha1-XaMtVsk3UxbNWdwogGJYBVBUVTk=",
+  "_location": "/backbone.call",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "backbone.call@github:paulovieira/backbone.call",
+    "name": "backbone.call",
+    "escapedName": "backbone.call",
+    "rawSpec": "github:paulovieira/backbone.call",
+    "saveSpec": "github:paulovieira/backbone.call",
+    "fetchSpec": null,
+    "gitCommittish": "master"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "github:paulovieira/backbone.call#53a973b12505d8a3cc4709c66f7ac7cfecdbaa77",
+  "_spec": "backbone.call@github:paulovieira/backbone.call",
+  "_where": "C:\\proj\\WebServices\\PMS\\Main\\Host10.PMS\\Host10.PMS\\Areas\\Kiosk\\ClientApp",
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Router for backbone.js inspired by hapi",
+  "devDependencies": {
+    "backbone": "^1.3.3",
+    "backbone.base-router": "^1.3.2",
+    "backbone.marionette": "^3.4.4",
+    "camelcase": "^4.0.0",
+    "jquery": "^1.12.4",
+    "umd": "^3.0.1",
+    "underscore": "^1.8.3",
+    "webpack": "^1.14.0",
+    "webpack-node-externals": "^1.5.4",
+    "webpack-shell-plugin": "^0.5.0"
+  },
+  "main": "./lib/index2.js",
+  "name": "backbone.call",
+  "peerDependencies": {
+    "underscore": "^1.8.3",
+    "backbone": "^1.3.3",
+    "jquery": "^1.12.4",
+    "backbone.base-router": "^1.3.2",
+    "backbone.marionette": "^2.4.7"
+  },
+  "scripts": {
+    "build": "webpack --config ./build/webpack.config.js",
+    "build-watch": "webpack --watch --config ./build/webpack.config.js"
+  },
+  "version": "0.0.1"
+}

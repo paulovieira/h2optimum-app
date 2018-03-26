@@ -1,0 +1,35 @@
+
+<div class="modal-header">
+    <h4 class="modal-title">
+
+    {% if Id == 0 %}
+        New controller
+    {% else %}
+        Edit controller
+    {% endif %}
+    
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="form-group">
+                <label for="_input-1">Description (optional)</label>
+                <input type="text" class="form-control" name="description" value="{{ description }}" x-id="_input-1" />
+            </div>
+            <div class="form-group">
+                <label for="_input-2">MAC address</label>
+                <input type="text" class="form-control" name="mac" value="{{ mac }}" x-id="_input-2" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-bold btn-secondary" data-id="close">Close</button>
+    <button type="button" class="btn btn-bold btn-primary" data-id="save">Save</button>
+</div>
+
