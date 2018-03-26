@@ -264,6 +264,7 @@ let View = Mn.View.extend({
                 ts.push(new Date(internals.response[i].ts));
 
                 if (window.h2optimum.isProduction ) {
+                    debugger
                     if (internals.response[i].sid === 1 && internals.response[i].device_id === 'f8:f0:05:f7:df:1f') {
                         data1.push(internals.response[i].val);
                     }
