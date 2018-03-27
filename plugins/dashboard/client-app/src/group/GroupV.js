@@ -48,6 +48,7 @@ let View = Mn.View.extend({
         'datepicker': 'input[data-id="flatpickr-datepicker"]',
         'datepicker-option': '[data-id="datepicker-select"] > a.dropdown-item',
         'chart-container': '[data-id="chart-container"]',
+        'chart-container-battery': '[data-id="chart-container-battery"]',  // to be removed
         'controller-options': '[data-id="controllers-table"] tr a',
         'add-automatism': '[data-id="add-automatism"]',
     },
@@ -221,6 +222,29 @@ let View = Mn.View.extend({
 
     },
     
+    computeWPLinear: function (resistance){
+
+        let wp = resistance / 146.87;
+
+        return wp;
+    },
+
+    computeWPQuadratic: function (resistance, temp){
+
+        let wp = 0;
+
+        if (resistance < 1000) {
+            wp = -20 * (resistance * (1 + 0.018 * (temp - 24)) - 0.55);
+        }
+        else if (wp < 8000) {
+            wp = (-3.213 * resistance - 4.093) / (1 - 0.009733 * resistance - 0.01205 * temp);
+        }
+        else {
+            wp = -2.246 - 5.239 * resistance * (1 + 0.018 * (temp - 24)) - 0.06756 * Math.pow(resistance, 2) * Math.pow(1 + 0.018 * (temp - 24), 2);
+        }
+
+        return wp;
+    },
 
     refreshBillboardChart: function() {
 
@@ -231,9 +255,13 @@ let View = Mn.View.extend({
 
         let data1 = ts.map(date => null)
         let data2 = ts.map(date => null)
+        let data3 = ts.map(date => null)
+        let data4 = ts.map(date => null)
 
-        data1.unshift('f8:f0:05:f7:df:1f')
-        data2.unshift('f8:f0:05:f5:e0:6e')
+        data1.unshift('f8:f0:05:f7:df:1f-linear')
+        data2.unshift('f8:f0:05:f7:df:1f-quadratic')
+        data3.unshift('f8:f0:05:f5:e0:6e-linear')
+        data4.unshift('f8:f0:05:f5:e0:6e-quadratic')
         
 
         //let currentDates = Radio.channel('dates').request('get');
@@ -258,38 +286,130 @@ let View = Mn.View.extend({
             let ts = [];
             let data1 = [];
             let data2 = [];
+            let data3 = [];
+            let data4 = [];
 
             internals.response = response;
-            for (let i = 0; i < internals.response.length; i++) {
-                ts.push(new Date(internals.response[i].ts));
 
-                if (window.h2optimum.isProduction ) {
-                    debugger
-                    if (internals.response[i].sid === 2 && internals.response[i].device_id === 'f8:f0:05:f7:df:1f') {
-                        data1.push(internals.response[i].val);
+            // loop for wp
+            for (let i = 0; i < internals.response.length; i++) {
+
+                let response = internals.response[i];
+
+                if (response.val > 13000 || response.val < 0) { continue }
+
+                if (response.sid !== 2) { continue }
+
+
+                let arrayTemp = internals.response.filter(obj => {
+
+                    return true && 
+                        obj.device_id === response.device_id &&
+                        obj.type === 't' && 
+                        obj.val > -20 && 
+                        obj.val < 50 &&
+                        Math.abs(DateFns.differenceInMilliseconds(obj.ts, response.ts)) < 10;
+                })
+
+                if (response.device_id === 'f8:f0:05:f7:df:1f') {
+                    ts.push(new Date(response.ts));
+
+                    data1.push(this.computeWPLinear(response.val));
+
+                    if (arrayTemp.length > 0) {
+                        
+                        data2.push(this.computeWPQuadratic(response.val, arrayTemp[0].val));
+                    }
+                    else {
+                        data2.push(null);
+                    }
+                    
+                    data3.push(null)
+                    data4.push(null)
+                }
+
+                if (response.device_id === 'f8:f0:05:f5:e0:6e') {
+                    ts.push(new Date(response.ts));
+                    
+                    data3.push(this.computeWPLinear(response.val));
+
+                    if (arrayTemp.length > 0) {
+                        
+                        data4.push(this.computeWPQuadratic(response.val, arrayTemp[0].val));
+                    }
+                    else {
+                        data4.push(null);
                     }
 
-                    if (internals.response[i].sid === 2 && internals.response[i].device_id === 'f8:f0:05:f5:e0:6e') {
-                        data2.push(internals.response[i].val);
-                    }                    
-                }
-                else {
-                    data1.push(internals.response[i].val);
-                }
-
+                    data1.push(null)
+                    data2.push(null)
+                }                    
             }
 
             ts.unshift('ts');
-            data1.unshift('f8:f0:05:f7:df:1f')
-            data2.unshift('f8:f0:05:f5:e0:6e')
+
+            data1.unshift('f8:f0:05:f7:df:1f-linear')
+            data2.unshift('f8:f0:05:f7:df:1f-quadratic')
+            data3.unshift('f8:f0:05:f5:e0:6e-linear')
+            data4.unshift('f8:f0:05:f5:e0:6e-quadratic')
+            
 //debugger
+
             this.chart.load({
                 columns: [
                     ts,
                     data1,
-                    data2
+                    data2,
+                    data3,
+                    data4
                 ]
             })
+
+
+
+
+            // for battery
+
+            let tsBattery = [];
+            let data1Battery = [];
+            let data2Battery = [];
+
+            //internals.response = response;
+
+            // loop for battery
+            for (let i = internals.response.length - 1; i >= 0; i--) {
+
+                let response = internals.response[i];
+
+                if (response.type !== 'b') { continue }
+
+                if (response.device_id === 'f8:f0:05:f7:df:1f') {
+                    tsBattery.push(new Date(response.ts));
+                    data1Battery.push(response.val);
+                    data2Battery.push(null)
+                }
+
+                if (response.device_id === 'f8:f0:05:f5:e0:6e') {
+                    tsBattery.push(new Date(response.ts));
+                    data2Battery.push(response.val);
+                    data1Battery.push(null)
+                }                    
+            }
+
+            tsBattery.unshift('tsBattery');
+            data1Battery.unshift('f8:f0:05:f7:df:1f-battery')
+            data2Battery.unshift('f8:f0:05:f5:e0:6e-battery')
+            
+//debugger
+
+            this.chartBattery.load({
+                columns: [
+                    tsBattery,
+                    data1Battery,
+                    data2Battery,
+                ]
+            })
+
             
         })
 
@@ -322,6 +442,8 @@ let View = Mn.View.extend({
                     ts,
                     data1,
                     data2,
+                    data3,
+                    data4,
                     // centro3,
                     // poco1,
                     // poco2,
@@ -330,6 +452,8 @@ let View = Mn.View.extend({
                 types: {
                     'data1': 'line',
                     'data2': 'line',
+                    'data3': 'line',
+                    'data4': 'line',
                     // 'centro3': 'line',
                     // 'poco1': 'line',
                     // 'poco2': 'line',
@@ -402,6 +526,154 @@ let View = Mn.View.extend({
                     }
                 },
                 y: {
+                    /*
+                    label: {
+                        text: 'Revenue',
+                        position: 'outer-middle'
+                    },
+                    */
+
+                    // TODO: adjust the padding taking into account the min valur: if the min is 'far' from 0, we should add some more
+                    // padding
+                    padding: {
+                        top: 50,
+                        bottom: 50 
+                    },
+                    tick: {
+                        //TODOvalues: [0, 2000, 4000, 6000, 8000, 10000],
+                        //format: yValue => Utils.getFormattedNumber(yValue, 'int', { precision: 1, html: false }),
+                        format: yValue => yValue,
+                        outer: false
+                    }
+                }
+            },
+
+            tooltip: {
+                format: {
+                    title: date => DateFns.format(date, 'dddd, D/MMM/YYYY HH:mm:ss'),
+                    value: value => { if(value == null){ debugger} return value.toFixed(1) },
+                }
+            },
+            grid: {
+
+                x: {
+                    show: false,
+                    //lines: tsGrid.map(date => { return { value: date, class: 'chart-vertical-ticks' } })
+                },
+                y: {
+                    show: true,
+                },
+            },
+
+            size: {
+                height: 300
+            }
+        });
+
+
+
+        var tsBattery = this.generateTs();
+        tsBattery.unshift('tsBattery');
+
+        var xTick = this.getXTick();
+
+        let data1Battery = tsBattery.map(date => null)
+        let data2Battery = tsBattery.map(date => null)
+
+        data1Battery.unshift('f8:f0:05:f7:df:1f-battery')
+        data2Battery.unshift('f8:f0:05:f5:e0:6e-battery')
+
+        this.chartBattery = Billboard.bb.generate({
+            bindto: this.getUI('chart-container-battery').get(0),
+
+            data: {
+                x: "tsBattery",
+                columns: [
+                    tsBattery,
+                    data1Battery,
+                    data2Battery,
+
+                    // centro3,
+                    // poco1,
+                    // poco2,
+                    // poco3,
+                ],
+                types: {
+                    'data1Battery': 'line',
+                    'data2Battery': 'line',
+
+                    // 'centro3': 'line',
+                    // 'poco1': 'line',
+                    // 'poco2': 'line',
+                    // 'poco3': 'line',
+                },
+                /*
+                classes: {
+                    centro1: 'centro1',
+                    centro2: 'centro2',
+                    centro3: 'centro3',
+                }
+                */
+                
+            },
+            zoom: {
+                enabled: true,
+/*
+                rescale: true,
+                onzoom: function(domain, x, y, z) { 
+                    debugger
+                },
+                onzoomstart: function(domain, x, y, z) { 
+                    debugger
+                },
+                */
+                onzoomend: function(domain, x, y, z) { 
+
+                    var extent = chart.zoom();
+                    // TODO: update the ticks manualy according to the new zoom
+                }
+                
+
+            },
+            // see: https://github.com/eventbrite/britecharts/blob/master/src/charts/helpers/colors.js
+            
+            color: {
+                pattern: [
+                    '#6aedc7', //green
+                    //'#39c2c9', //blue
+                    //'#ffce00', //yellow
+                    '#ffa71a', //orange
+                    '#f866b9', //pink
+                    '#998ce3' //purple
+                ]
+            },
+            
+
+            transition: {
+                duration: 200
+            },
+
+            point: {
+                show: true,
+                r: 0,
+                focus: {
+                    expand: {
+                        enabled: true,
+                        r: 4
+                    }
+                },
+            },
+
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        values: xTick.values,
+                        format: xTick.format,
+                        outer: false
+                    }
+                },
+                xxxy: {
                     /*
                     label: {
                         text: 'Revenue',
