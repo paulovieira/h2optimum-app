@@ -26,74 +26,7 @@ const internals = {};
 
 internals.main = function(){
 
-    // the type of controller (or "group controller") can be "switch", "sensor", "mixed" or "new"
-    Radio.channel('public').reply('controllerGroups', [
-        {
-            url: '/permalab',
-            type: 'switch',
-            groupSlug: 'permalab',
-            name: 'Permalab',
-            description: '&nbsp;',
-            statusCode: 1,
-            statusMessage: 'on',
-            statusMessage2: '(4h23m to finish)',
-            diagnosticCode: 0,
-            diagnosticMessage: 'ok',
-            diagnosticMessage2: 'wefgwe fwef we fwefiowen fiowen fiownefoi weiofnwioe fniowe nfiown fiowfeiow ofi wof wiof owifw nio',
-            center: [51.505, -0.09],
-            soilType: 'sandy loam',
-            cropType: 'corn'
 
-        },
-        {
-            type: 'mixed',
-            groupSlug: 'milho-1',
-            name: 'Milho 1',
-            description: 'herdade do zambujal - norte',
-            statusCode: 0,
-            statusMessage: 'off',
-            statusMessage2: '&nbsp;',
-            diagnosticCode: 1,
-            diagnosticMessage: 'problems detected!',
-            diagnosticMessage2: '(last measurement was 2 days ago)',
-            center: [51.505, -0.09],
-            soilType: 'light texture silt loam',
-            cropType: 'fruits'
-
-        },
-        {
-            type: 'mixed',
-            groupSlug: 'milho-2',
-            name: 'Milho 2',
-            description: 'herdade do zambujal - sul',
-            statusCode: 0,
-            statusMessage: 'off',
-            statusMessage2: '&nbsp;',
-            diagnosticCode: 2,
-            diagnosticMessage: 'requires attention',
-            diagnosticMessage2: '&nbsp;',
-            center: [51.505, -0.09],
-            soilType: 'heavier texture silt loam ',
-            cropType: 'wheat'
-
-        },
-        {
-            type: 'sensor',
-            groupSlug: 'pomar',
-            name: 'Pomar',
-            description: '&nbsp;',
-            statusCode: 0,
-            statusMessage: 'off',
-            statusMessage2: '&nbsp;',
-            diagnosticCode: 2,
-            diagnosticMessage: 'requires attention',
-            diagnosticMessage2: '',
-            center: [51.505, -0.09],
-            soilType: 'loam',  // fine sand
-            cropType: 'grapes'
-
-        }
-    ])
     // start with a clean DOM and add the permanent regions (always present)
 
     Utils.resetDOM();
@@ -122,13 +55,93 @@ internals.main = function(){
 
     
     // main starting point; any error thrown in the views will end up in the callback to done
-    let p = Q()
+    let p = Q();
     
-    // activate the router (start the kiosk app)
     p = p.then(() => {
 
-        $('div[data-id="initial-loading"]').remove();
+        // TODO: ajax to load the installations for this user
 
+        // the type of controller (or "group controller") can be "switch", "sensor", "mixed" or "new"
+        let dummyInstallations = [
+            {
+                id: 1,
+                type: 'switch',
+                slug: 'permalab',
+                name: 'Permalab',
+                description: '&nbsp;',
+                statusCode: 1,
+                statusMessage: 'on',
+                statusMessage2: '(4h23m to finish)',
+                diagnosticCode: 0,
+                diagnosticMessage: 'ok',
+                diagnosticMessage2: 'wefgwe fwef we fwefiowen fiowen fiownefoi weiofnwioe fniowe nfiown fiowfeiow ofi wof wiof owifw nio',
+                center: [51.505, -0.09],
+                soilTypeCode: 'soil_sandy_loam',
+                cropTypeCode: 'crop_corn'
+
+            },
+            {
+                id: 2,
+                type: 'mixed',
+                slug: 'milho-1',
+                name: 'Milho 1',
+                description: 'herdade do zambujal - norte',
+                statusCode: 0,
+                statusMessage: 'off',
+                statusMessage2: '&nbsp;',
+                diagnosticCode: 1,
+                diagnosticMessage: 'problems detected!',
+                diagnosticMessage2: '(last measurement was 2 days ago)',
+                center: [51.505, -0.09],
+                soilTypeCode: 'soil_light_texture_silt_loam',
+                cropTypeCode: 'crop_fruits'
+
+            },
+            {
+                id: 3,
+                type: 'mixed',
+                slug: 'milho-2',
+                name: 'Milho 2',
+                description: 'herdade do zambujal - sul',
+                statusCode: 0,
+                statusMessage: 'off',
+                statusMessage2: '&nbsp;',
+                diagnosticCode: 2,
+                diagnosticMessage: 'requires attention',
+                diagnosticMessage2: '&nbsp;',
+                center: [51.505, -0.09],
+                soilTypeCode: 'soil_heavier_texture_silt_loam',
+                cropTypeCode: 'crop_wheat'
+
+            },
+            {
+                id: 4,
+                type: 'sensor',
+                slug: 'pomar',
+                name: 'Pomar',
+                description: '&nbsp;',
+                statusCode: 0,
+                statusMessage: 'off',
+                statusMessage2: '&nbsp;',
+                diagnosticCode: 2,
+                diagnosticMessage: 'requires attention',
+                diagnosticMessage2: '',
+                center: [51.505, -0.09],
+                soilTypeCode: 'soil_loam',  // fine sand
+                cropTypeCode: 'crop_grapes'
+
+            }
+        ];
+
+        return dummyInstallations;
+    })
+
+    // activate the router (start the kiosk app)
+    p = p.then(installations => {
+
+        Radio.channel('public').reply('installations', installations);
+
+        $('div[data-id="initial-loading"]').remove();
         router.start({
             hashChange: true,
             //root: "/Bi/"

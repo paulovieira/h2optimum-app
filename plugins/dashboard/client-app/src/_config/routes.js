@@ -51,7 +51,7 @@ exports.dashboard = {
 
 exports.group = {
 
-    path: '/groups/:groupSlug',
+    path: '/groups/:installationSlug',
     validate: function (request) {
     },
 
@@ -59,7 +59,6 @@ exports.group = {
     {
         view: require('../root/RootV'),
         region: 'rootR',
-
         children: [
         {
             view: require('../group/GroupV'),
@@ -68,11 +67,11 @@ exports.group = {
 
                 var requestData = viewOptions.request;
                 viewOptions.request._ts = Date.now();
-                var data = Radio.channel('public').request('controllerGroups');
-                var dataFiltered = data.filter(obj => obj.groupSlug === requestData.params.groupSlug)
+                var data = Radio.channel('public').request('installations');
+                var dataFiltered = data.filter(obj => obj.slug === requestData.params.installationSlug)
 
                 if (dataFiltered.length === 0) {
-                    alert('the group does not exist');
+                    alert(`the installation ${ requestData.params.installationSlug } does not exist`);
                     return false;
                 }
 
@@ -97,178 +96,6 @@ exports.group = {
 };
 
 /*
-exports.dashboard = {
-
-    path: '/dashboard',
-    validate: function (request) {
-    },
-
-    children: [
-    {
-        view: require('../root/RootV'),
-        region: 'rootR',
-
-        children: [
-        {
-            view: require('../dashboard/DashboardV'),
-            region: 'main',
-
-            children: [
-            {
-                view: require('../dashboard/daily/RevenueWidgetV'),
-                region: 'revenue',
-            },
-
-            {
-                view: require('../dashboard/daily/ADRWidgetV'),
-                region: 'adr',
-            },
-
-            {
-                view: require('../dashboard/daily/RevParWidgetV'),
-                region: 'revPar',
-            },
-
-            {
-                view: require('../dashboard/daily/OccupancyWidgetV'),
-                region: 'occupancy',
-            },
-            {
-                view: require('../dashboard/daily/RoomNightsWidgetV'),
-                region: 'roomNights',
-            },
-            
-            //{
-            //    view: require('../dashboard/daily/PaxWidgetV'),
-            //    region: 'pax',
-            //},
-
-            {
-                view: require('../dashboard/daily/InventoryWidgetV'),
-                region: 'inventory',
-            },
-
-            {
-                view: require('../dashboard/summary/Date-DatePrevious-WidgetV'),
-                region: 'date-date-previous',
-            },
-
-            {
-                view: require('../dashboard/summary/Date-DateLY-WidgetV'),
-                region: 'date-date-ly',
-            },
-            {
-                view: require('../dashboard/summary/MTD-MTDLY-WidgetV'),
-                region: 'mtd-mtd-ly',
-            },
-            {
-                view: require('../dashboard/summary/YTD-YTDLY-WidgetV'),
-                region: 'ytd-ytd-ly',
-            },
-
-            {
-                view: require('../dashboard/map/MapWidgetV'),
-                region: 'map',
-            },
-
-            {
-                view: require('../dashboard/social-media/SocialMediaWidgetV'),
-                region: 'social-media',
-            },
-            {
-                view: require('../dashboard/social-media/TripadvisorWidgetV'),
-                region: 'tripadvisor',
-            },
-            {
-                view: require('../dashboard/social-media/WebsiteWidgetV'),
-                region: 'website',
-            },
-            {
-                view: require('../dashboard/costs/ChartCostsDepartmentalV'),
-                region: 'chart-costs-departmental',
-            },
-            {
-                view: require('../dashboard/costs/TableCostsDepartmentalV'),
-                region: 'table-costs-departmental',
-            },
-
-            {
-                view: require('../dashboard/costs/GOPWidgetV'),
-                region: 'gop',
-            },
-            {
-                view: require('../dashboard/costs/GOPParWidgetV'),
-                region: 'gopPar',
-            },
-            {
-                view: require('../_common/views/FooterV'),
-                region: 'footer',
-            },
-            ],
-        }
-        ]
-    }
-    ]
-};
-
-
-exports.primavera = {
-
-    path: '/config/primavera',
-    validate: function (request) {
-
-    },
-
-    children: [
-    {
-        view: require('../root/RootV'),
-        children: [
-        {
-            view: require('../primavera-config/PrimaveraV'),
-            region: 'main',
-            children: [
-            {
-                view: require('../_common/views/FooterV'),
-                region: 'footer',
-            },
-            ],
-
-        }
-        ]
-    }
-    ]
-};
-
-
-exports.tabularReports = {
-
-    path: '/tabular-reports/:pdfFile',
-    validate: function (request) {
-
-    },
-
-    children: [
-    {
-
-        view: require('../root/RootV'),
-        children: [
-        {
-            view: require('../reports/TabularReportsV'),
-            region: 'main',
-
-            children: [
-            {
-                view: require('../_common/views/FooterV'),
-                region: 'footer',
-            },
-            ],
-
-        }
-        ]
-    }
-    ]
-
-};
 
 
 exports.qlikReports = {

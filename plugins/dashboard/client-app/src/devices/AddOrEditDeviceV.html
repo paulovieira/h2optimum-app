@@ -2,10 +2,10 @@
 <div class="modal-header">
     <h4 class="modal-title">
 
-    {% if Id == 0 %}
-        New controller
+    {% if id > 0 %}
+        Edit unit
     {% else %}
-        Edit controller
+        New unit
     {% endif %}
     
     </h4>
@@ -17,11 +17,15 @@
 
             <div class="form-group">
                 <label for="_input-1">Description (optional)</label>
-                <input type="text" class="form-control" name="description" value="{{ description }}" x-id="_input-1" />
+                <input type="text" class="form-control" name="description" value="{{ description }}"  />
             </div>
             <div class="form-group">
                 <label for="_input-2">MAC address</label>
-                <input type="text" class="form-control" name="mac" value="{{ mac }}" x-id="_input-2" />
+                <input type="text" class="form-control" name="mac" value="{{ mac }}"  />
+            </div>
+            <div class="form-group">
+                <label for="_input-3">Activation key</label>
+                <input type="text" class="form-control" name="activationKey" value="{{ activationKey }}"  />
             </div>
 
         </div>

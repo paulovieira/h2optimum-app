@@ -54,7 +54,7 @@
 
               <span class="" >
                 <h5 style="display: inline;">Soil type:</h5>
-                <span style="font-size: 14px;">{{ soilType }} </span>
+                <span style="font-size: 14px;">{{ soilTypeCode }} </span>
               </span>
 
             </div>
@@ -63,7 +63,7 @@
 
               <span class="" >
                 <h5 style="display: inline;">Crop type:</h5>
-                <span style="font-size: 14px;">{{ cropType }} </span>
+                <span style="font-size: 14px;">{{ cropTypeCode }} </span>
               </span>
 
             </div>
@@ -73,71 +73,7 @@
 
       </div>
 
-      <div class="col-sm-6">
-
-        <div class="card" >
-          <header class="card-header card-inverse card-cyan" style="padding: 11px 20px;">
-            <h5 class="card-title card-title-bold">Controllers</h5>
-
-            <button class="btn btn-sm btn-bold" data-id="add-controller">
-              <i class="fa fa-plus-circle" style="font-size: 1.3em; vertical-align: text-bottom;"></i>
-              Add new controller
-            </button>
-
-          </header>
-
-          <div class="card-body" style="padding-top: 0.5rem; ">
-
-            <table class="table table table-sm table-hover" data-id="controllers-table">
-              <thead class="">
-                <tr>
-                  <th>Description</th>
-                  <th>Type</th>
-                  <th>Mac address</th>
-                  <th>Last reading</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row"></th>
-                  <td>rega</td>
-                  <td>01-23-45-67-89-ab-cd-ef</td>
-                  <td>&ndash;</td>
-                  <td>
-                    <a tabindex="0" data-id="controller-options" style="cursor: pointer;">
-                      <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">centro</th>
-                  <td>sensor</td>
-                  <td>01-67-89-23-45-ef-cd-ab</td>
-                  <td>17-Jan 13:25 
-                  </td>
-                  <td>
-                    <a tabindex="0" data-id="controller-options"  style="cursor: pointer;"> 
-                      <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">poço</th>
-                  <td>sensor</td>
-                  <td>01-89-67-45-23-ef-cd-ab</td>
-                  <td>17-Jan 13:28</td>
-                  <td>
-                    <a tabindex="0" data-id="controller-options"  style="cursor: pointer;"> 
-                      <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-          </div>
-        </div>
+      <div class="col-sm-6" data-region-id="devices">
 
       </div>
 
@@ -153,9 +89,9 @@
             <h5 class="card-title card-title-bold">Measurements</h5>
 
             <div class="input-group" style="width: inherit;">
-              <input type="text" class="form-control" data-id="flatpickr-datepicker" disabled>
+              <input type="text" class="form-control" data-id="flatpickr-datepicker" >
               <div class="input-group-btn">
-                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                   <i class="fa fa-calendar" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" data-id="datepicker-select">
@@ -190,9 +126,9 @@
             <h5 class="card-title card-title-bold">Battery</h5>
             
             <div class="input-group" style="width: inherit;">
-              <input type="text" class="form-control" data-id="flatpickr-datepicker" disabled>
+              <input type="text" class="form-control" data-id="flatpickr-datepicker" >
               <div class="input-group-btn">
-                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                   <i class="fa fa-calendar" aria-hidden="true"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" data-id="datepicker-select">

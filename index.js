@@ -116,12 +116,31 @@ const manifest = {
             },
             options: {}
         },
+        /*
 
+        // dependencies: []
+        {
+            plugin: {
+                register: './plugins/catch-all/catch-all.js',
+                options: {}
+            },
+            options: {}
+        },
+*/
 
         // dependencies: ['vision', 'inert']
         {
             plugin: {
                 register: './plugins/dashboard/dashboard.js',
+                options: {}
+            },
+            options: {}
+        },
+
+        // dependencies: []
+        {
+            plugin: {
+                register: './plugins/devices/devices.js',
                 options: {}
             },
             options: {}

@@ -98,7 +98,7 @@ let View = Mn.View.extend({
 
     fetchData: function () {
 
-        var data = Radiox.channel('public').request('controllerGroups');
+        var data = Radio.channel('public').request('installations');
         var newController = [{
             type: 'new',
             name: 'New controller',

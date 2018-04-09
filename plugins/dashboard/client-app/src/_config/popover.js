@@ -3,11 +3,13 @@ let Radio = require('backbone.radio');
 
 $(document).on('click', '.popover .dropdown-item', function(ev){
 
-	let popoverId = $(this).closest('div.popover').attr('id');
-	Radio.channel('popover').trigger('popover:item:clicked', popoverId);
+    let action = $(this).data('action');
+    let entityId = $(this).data('entity-id');
+    
+	Radio.channel('popover').trigger('popover:item:clicked', action, entityId);
 });
 
-exports.controller = exports.controllerConfig = {
+exports.baseConfig = {
     trigger: 'focus',
     //trigger: 'manual',
     placement: 'bottom',
@@ -19,9 +21,12 @@ exports.controller = exports.controllerConfig = {
             <div class="popover-body" style="padding: 3px 0 0 0;"></div>
         </div>
     `,
+    /*
     content: `
         <a class="dropdown-item" style="margin: 0; padding: 6px 25px;" href="#">Edit</a>
         <a class="dropdown-item" style="margin: 0; padding: 6px 25px;" href="#">Delete</a>
     `,
+    */
 
 };
+

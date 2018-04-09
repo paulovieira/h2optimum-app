@@ -1,0 +1,44 @@
+<div class="card" >
+  <header class="card-header card-inverse card-cyan" style="padding: 11px 20px;">
+    <h5 class="card-title card-title-bold">Units</h5>
+
+    <button class="btn btn-sm btn-bold" data-id="add-controller">
+      <i class="fa fa-plus-circle" style="font-size: 1.3em; vertical-align: text-bottom;"></i>
+      Add new unit
+    </button>
+
+  </header>
+
+  <div class="card-body" style="padding-top: 0.5rem; ">
+
+    <table class="table table table-sm table-hover">
+      <thead class="">
+        <tr>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Mac address</th>
+          <th>Last reading</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for obj in collection %}
+        <tr>
+          <th scope="row">{{ obj.description }}</th>
+          <td>{{ obj.deviceTypeCode }}</td>
+          <td>{{ obj.mac }}</td>
+          <td>{{ obj.lastReadingFormatted }}</td>
+          <td>
+            <a tabindex="0" data-device-id="{{ obj.id }}" style="cursor: pointer;">
+              <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+  </div>
+</div>

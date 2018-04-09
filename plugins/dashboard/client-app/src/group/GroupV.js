@@ -8,9 +8,10 @@ var DateFns = require('date-fns');
 var Billboard = require('billboard.js');
 
 var Utils = require('../_common/utils');
-var AddNewControllerV = require('./AddNewControllerV');
+//var AddNewControllerV = require('./AddNewControllerV');
+let DevicesListV = require('../devices/DevicesListV')
 var AddNewAutomatismV = require('./AddNewAutomatismV');
-var PopoverConfig = require('../_config/popover');
+///var PopoverConfig = require('../_config/popover');
 
 let internals = {};
 internals.measurementPeriodInMinutes = 20;
@@ -30,9 +31,9 @@ let View = Mn.View.extend({
         var groupId = Math.ceil(Math.random() * 3);
         this.model.set({ groupId: groupId})
         
-        this.listenTo(Radio.channel('popover'), 'popover:item:clicked', function(popoverId){
-            debugger
-        })
+        // this.listenTo(Radio.channel('popover'), 'popover:item:clicked', function(popoverId){
+        //     debugger
+        // })
         //Radio.channel('popover').listenTo('popover:item:clicked', popoverId);
         //Radio.channel('popover').on('popover:item:clicked', function(popoverId){
         //    debugger
@@ -41,6 +42,7 @@ let View = Mn.View.extend({
 
     ui: {
         'footer': '[data-region-id="footer"]',
+        'devices': '[data-region-id="devices"]',
         'main-content': 'div.main-content',
         'checkbox-switch-status': '[data-id="checkbox-switch-status"]',
         'status-text': '[data-id="status-text"]',
@@ -62,6 +64,7 @@ let View = Mn.View.extend({
 
     regions: {
         'footer': '@ui.footer',
+        'devices': '@ui.devices',
     },
 
     onAttach: function() {
@@ -71,12 +74,22 @@ let View = Mn.View.extend({
         let initialFromDate = internals.initialFromDate = DateFns.subDays(initialToDate, 4);
 
         Radio.channel('dates').request('set', [initialFromDate, initialToDate]);
+
+
+        let devicesM = new Backbone.Model({
+            slug: this.model.get('slug'),
+            installationId: this.model.get('id'),
+        });
+
+        this.getRegion('devices').show(new DevicesListV({ 
+            model: devicesM
+        }))
     },
 
     onRender: function () {
 
         var data = this.fetchData();
-        this.getUI('controller-options').popover(PopoverConfig.controller);
+        ///this.getUI('controller-options').popover(PopoverConfig.controller);
 
 
     },
@@ -210,13 +223,17 @@ let View = Mn.View.extend({
         let currentDates = Radio.channel('dates').request('get');
         let period = DateFns.differenceInHours(internals.initialToDate, internals.initialFromDate)
         let domain = window.h2optimum.isProduction ? 'http://api.2adapt.pt' : 'http://localhost:8000';
+        
 
         return Q($.ajax({
             type: 'GET',
             //url: '/v1/get-readings',
-            url: domain + '/v1/get-readings',
+            url: domain + '/v1/get-measurements',
             data: {
-                period: period
+                //period: period
+                fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
+                toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
+                deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
             },
         }))
 
@@ -232,18 +249,19 @@ let View = Mn.View.extend({
     computeWPQuadratic: function (resistance, temp){
 
         let wp = 0;
+        resistance = resistance / 1000;
 
-        if (resistance < 1000) {
+        if (resistance < 1) {
             wp = -20 * (resistance * (1 + 0.018 * (temp - 24)) - 0.55);
         }
-        else if (wp < 8000) {
+        else if (resistance < 8) {
             wp = (-3.213 * resistance - 4.093) / (1 - 0.009733 * resistance - 0.01205 * temp);
         }
         else {
             wp = -2.246 - 5.239 * resistance * (1 + 0.018 * (temp - 24)) - 0.06756 * Math.pow(resistance, 2) * Math.pow(1 + 0.018 * (temp - 24), 2);
         }
 
-        return wp;
+        return Math.abs(wp);
     },
 
     refreshBillboardChart: function() {
@@ -281,8 +299,8 @@ let View = Mn.View.extend({
         poco3.unshift('Poço 3');
 */
         // hardcoded
-        Q(this.getReadings()).then(response =>{ 
-//debugger
+        Q(this.getReadings()).then(response => { 
+
             let ts = [];
             let data1 = [];
             let data2 = [];
@@ -295,8 +313,9 @@ let View = Mn.View.extend({
             for (let i = 0; i < internals.response.length; i++) {
 
                 let response = internals.response[i];
+                response.val = Math.abs(response.val);
 
-                if (response.val > 13000 || response.val < 0) { continue }
+                if (response.val > 12000 || response.val < 0) { continue }
 
                 if (response.sid !== 2) { continue }
 
@@ -507,7 +526,7 @@ let View = Mn.View.extend({
 
             point: {
                 show: true,
-                r: 0,
+                r: 2,
                 focus: {
                     expand: {
                         enabled: true,
