@@ -55,13 +55,6 @@ let View = Mn.View.extend({
 
         // for new devices, this.model.get('id') is undefined , so it will be removed by JSON.stringify
         let data = _.extend({}, this.model.toJSON(), Backbone.Syphon.serialize(this));
-        debugger
-
-        //data.id = this.model.get('id');  
-        //data.installationId = 1;
-
-        // TODO: add in a select
-        data.deviceTypeCode = 'device_sensor'  // add in a select
 
         let p = Q($.ajax({
             url: '/api/upsert-devices',

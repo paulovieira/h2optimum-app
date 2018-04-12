@@ -15,8 +15,7 @@
       <thead class="">
         <tr>
           <th>Description</th>
-          <th>Type</th>
-          <th>Mac address</th>
+          <th>Battery mode</th>
           <th>Last reading</th>
           <th></th>
         </tr>
@@ -26,8 +25,7 @@
         {% for obj in collection %}
         <tr>
           <th scope="row">{{ obj.description }}</th>
-          <td>{{ obj.deviceTypeCode }}</td>
-          <td>{{ obj.mac }}</td>
+          <td>{{ obj.batteryModeCode }}</td>
           <td>{{ obj.lastReadingFormatted }}</td>
           <td>
             <a tabindex="0" data-device-id="{{ obj.id }}" style="cursor: pointer;">

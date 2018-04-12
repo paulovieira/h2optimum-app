@@ -15,7 +15,7 @@ internals.devicesSchema = Joi.object({
     id: Joi.number().integer(),
     // userId: Joi.number().integer(),  
     installationId: Joi.number().integer(),
-    deviceTypeCode: Joi.string().allow(['device_sensor', 'device_irrigation']),
+    deviceTypeCode: Joi.string().allow(['device_sensor', 'device_switch', 'device_mixed']),
     batteryModeCode: Joi.string().allow(['battery_normal', 'battery_eco', 'battery_standby']),
     mac: Joi.string(),
     activationKey: Joi.string().allow(''),
