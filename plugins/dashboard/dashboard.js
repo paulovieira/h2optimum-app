@@ -15,6 +15,12 @@ let Glob = require('glob');
 
 let internals = {};
 
+const DATA_NOT_SUBMITTED = 1;
+const UNKNOWN_USERNAME = 2;
+const WRONG_PASSWORD = 3;
+const EXPIRED = 4;
+
+
 // the path of the page that has the form for the login data
 //internals.loginPath = '/login';
 internals.clientAppBuildDir = Path.join(__dirname, 'client-app/dist');
@@ -66,6 +72,8 @@ exports.register = function(server, options, next){
         path: '/dashboard',
         handler: function (request, reply) {
 
+            console.log('/dasboard-auth');
+
             let templateFile = 'templates/dashboard.html';
             let ctx = {
                 isProduction: !!Config.get('production'),
@@ -77,6 +85,42 @@ exports.register = function(server, options, next){
         }
     });
        
+    // authenticated version
+    server.route({ 
+        method: 'GET',
+        path: '/dashboard-auth',
+        handler: function (request, reply) {
+
+            console.log('/dasboard-auth');
+
+            if (!request.auth.isAuthenticated) {
+
+                // check if this request has session data (which means we have an expired session, since isAuthenticated is false)
+                if (request.auth.artifacts && request.auth.artifacts.uuid) {
+                    const failReason = EXPIRED;
+                    return reply.redirect(`/login?auth-fail-reason=${ failReason }`);
+                }
+                else {
+                    return reply.redirect('/login');
+                }
+            }
+
+            let templateFile = 'templates/dashboard.html';
+            let ctx = {
+                isProduction: !!Config.get('production'),
+            };
+
+            reply.view(templateFile, {
+                ctx
+            });
+        },
+        config: {
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            }
+        }
+    });
 
     // static files 
     

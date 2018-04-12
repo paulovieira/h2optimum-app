@@ -43,6 +43,11 @@ const manifest = {
                     socket: false
                 }
             }
+        },
+
+        cache: {
+            name: 'memory-cache',
+            engine: require('catbox-memory')
         }
     },
 
@@ -116,6 +121,25 @@ const manifest = {
             },
             options: {}
         },
+
+        // https://github.com/hapijs/hapi-auth-cookie/tree/v6.1.1
+        {
+            plugin: {
+                register: 'hapi-auth-cookie',
+                options: {}
+            },
+            options: {}
+        },
+
+        // dependencies: ['hapi-auth-cookie']
+        {
+            plugin: {
+                register: 'hapi-auth-cookie-cache',
+                options: Config.get('plugins:hapi-auth-cookie-cache')
+            },
+            options: {}
+        },
+
         /*
 
         // dependencies: []
@@ -128,7 +152,15 @@ const manifest = {
         },
 */
 
-        // dependencies: ['vision', 'inert']
+        {
+            plugin: {
+                register: './plugins/routes-login//routes-login.js',
+                options: {}
+            },
+            options: {}
+        },
+
+        // dependencies: ['vision', 'inert', 'hapi-auth-cookie-cache']
         {
             plugin: {
                 register: './plugins/dashboard/dashboard.js',

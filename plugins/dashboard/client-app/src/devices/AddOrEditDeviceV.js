@@ -33,6 +33,9 @@ let View = Mn.View.extend({
                 backdrop: 'static',  // use a backdrop which doesn't close the modal on click
             }
         },
+        {
+            behaviorClass: require('../_common/behaviors/BootstrapSelectpickerB')
+        }
     ],
 
     regions: {
@@ -52,7 +55,7 @@ let View = Mn.View.extend({
 
         // for new devices, this.model.get('id') is undefined , so it will be removed by JSON.stringify
         let data = _.extend({}, this.model.toJSON(), Backbone.Syphon.serialize(this));
-        
+        debugger
 
         //data.id = this.model.get('id');  
         //data.installationId = 1;

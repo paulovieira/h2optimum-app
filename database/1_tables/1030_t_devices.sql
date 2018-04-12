@@ -16,6 +16,7 @@ create table t_devices(
     user_id int references t_users(id) on delete set null,
     installation_id int references t_installations(id) on delete set null,
     device_type_code text references t_device_types(code) on delete set null,
+    battery_mode_code text references t_battery_modes(code) on delete set null default 'battery_normal',
     mac macaddr not null,
     activation_key text,
     description text,

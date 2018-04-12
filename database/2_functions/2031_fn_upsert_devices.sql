@@ -32,6 +32,7 @@ end if;
 new_row.user_id          := COALESCE(new_row.user_id,     current_row.user_id);
 new_row.installation_id  := COALESCE(new_row.installation_id, current_row.installation_id);
 new_row.device_type_code := COALESCE(new_row.device_type_code, current_row.device_type_code);
+new_row.battery_mode_code:= COALESCE(new_row.battery_mode_code, current_row.battery_mode_code);
 new_row.mac              := COALESCE(new_row.mac, current_row.mac);
 new_row.activation_key   := COALESCE(new_row.activation_key, current_row.activation_key);
 new_row.description      := COALESCE(new_row.description, current_row.description);
@@ -50,6 +51,7 @@ insert into t_devices(
   user_id,         
   installation_id, 
   device_type_code,
+  battery_mode_code,
   mac,             
   activation_key,             
   description,     
@@ -61,6 +63,7 @@ values (
   new_row.user_id,         
   new_row.installation_id, 
   new_row.device_type_code,
+  new_row.battery_mode_code,
   new_row.mac,             
   new_row.activation_key,             
   new_row.description,     
@@ -78,6 +81,7 @@ on conflict (id) do update set
   user_id          = excluded.user_id,         
   installation_id  = excluded.installation_id, 
   device_type_code = excluded.device_type_code,
+  battery_mode_code = excluded.battery_mode_code,
   mac              = excluded.mac,             
   activation_key   = excluded.activation_key,             
   description      = excluded.description,     
