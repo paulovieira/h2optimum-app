@@ -21,19 +21,19 @@ if _user_id is null then
   PERFORM raise_exception_invalid_or_missing_args('read_measurements', 'userId');
 end if;
 
--- TODO: is installationId is missing, it should return all the devices (among all installations for a given user)
-
 if _installation_id is null then
   PERFORM raise_exception_invalid_or_missing_args('read_measurements', 'installationId');
 end if;
 
+-- TODO: if installationId is missing, it should return all the devices (among all installations for a given user)
+
 query := $$
 
-select * from t_devices
-where 
-  user_id = %s and
-  installation_id = %s
-order by id asc
+	select * from t_devices
+	where 
+	  user_id = %s and
+	  installation_id = %s
+	order by id asc
 
 $$;
 
@@ -57,6 +57,11 @@ select * from read_devices('{
     "userId": 1,
     "installationId": 1
 
+}');
+
+// TO BE DONE (installationId is missing)
+select * from read_devices('{ 
+    "userId": 1
 }');
 
 */

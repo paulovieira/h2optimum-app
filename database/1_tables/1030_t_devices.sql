@@ -13,7 +13,7 @@ END IF;
 
 create table t_devices(
     id serial primary key,
-    user_id int references t_users(id) on delete set null,
+    user_id int references t_users(id) on delete set null, -- this field is a bit redundant, see the note below
     installation_id int references t_installations(id) on delete set null,
     device_type_code text references t_device_types(code) on delete set null,
     battery_mode_code text references t_battery_modes(code) on delete set null default 'battery_normal',
@@ -27,6 +27,9 @@ create table t_devices(
     unique(mac, activation_key),
     unique(installation_id, mac)
 );
+
+-- NOTE: we could obtain user_id from installation_id, but having both in this table makes the code easier; and since this table can be used only
+-- with authenticated requests, we always have user_id
 
 /*** END CODE FOR CHANGES  ***/
 

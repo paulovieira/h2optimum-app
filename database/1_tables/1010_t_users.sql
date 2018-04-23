@@ -19,8 +19,8 @@ create table t_users(
     pw_hash text not null,
     created_at timestamptz not null default now(),
     active bool default true,
-    recover text,
-    recover_valid_until timestamptz
+    --recover_code text,  TODO: create a separate table with recover_codes: user_id, recover_code, recover_code_created_at
+    --recover_code_created_at timestamptz
 );
 
 /*** END CODE FOR CHANGES  ***/
