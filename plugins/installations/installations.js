@@ -48,7 +48,10 @@ exports.register = function (server, options, next){
         path: '/api/get-installations',
         method: 'GET',
         config: {
-
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            }
             /*
             validate: {
 
@@ -122,7 +125,10 @@ exports.register = function (server, options, next){
         path: '/api/upsert-installations',
         method: 'POST',
         config: {
-
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            },
             validate: {
                 payload: internals.installationsSchema,
                 options: {
@@ -211,7 +217,10 @@ exports.register = function (server, options, next){
         path: '/api/delete-installations',
         method: 'POST',
         config: {
-
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            },
             validate: {
                 payload: {
                     id: Joi.number().integer().required()

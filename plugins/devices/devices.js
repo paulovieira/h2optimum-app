@@ -49,7 +49,10 @@ exports.register = function (server, options, next){
         path: '/api/get-devices',
         method: 'GET',
         config: {
-
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            },
             validate: {
 
                 query: {
@@ -60,12 +63,6 @@ exports.register = function (server, options, next){
                     stripUnknown: true
                 }
             },
-
-            auth: {
-                strategy: 'cookie-cache',
-                mode: 'try'
-            }
-
         },
         handler: function (request, reply) {
 
@@ -125,7 +122,10 @@ exports.register = function (server, options, next){
         path: '/api/upsert-devices',
         method: 'POST',
         config: {
-
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            },
             validate: {
                 payload: internals.devicesSchema,
                 options: {
@@ -222,7 +222,10 @@ exports.register = function (server, options, next){
         path: '/api/delete-devices',
         method: 'POST',
         config: {
-
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            },
             validate: {
                 payload: {
                     id: Joi.number().integer().required()

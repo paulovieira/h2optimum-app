@@ -97,21 +97,24 @@ exports.register = function(server, options, next){
         },
         handler: function (request, reply) {
 
-            console.log('/dasboard-auth');
-
-            if (!request.auth.isAuthenticated) {
-
-                // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
-                if (request.auth.artifacts && request.auth.artifacts.uuid) {
-                    const failReason = EXPIRED;
-                    return reply.redirect(`/login?auth-fail-reason=${ failReason }`);
-                }
-                else {
-                    return reply.redirect('/login');
-                }
-            }
-
             console.log('request.auth', request.auth)
+
+            if (Config.get('auth') === 'false') {
+                request.auth.credentials = { id: 2 }
+            }
+            else {
+                if (!request.auth.isAuthenticated) {
+
+                    // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
+                    if (request.auth.artifacts && request.auth.artifacts.uuid) {
+                        const failReason = EXPIRED;
+                        return reply.redirect(`/login?auth-fail-reason=${ failReason }`);
+                    }
+                    else {
+                        return reply.redirect('/login');
+                    }
+                }                
+            }
 
             let templateFile = 'templates/dashboard.html';
             let ctx = {
@@ -231,7 +234,7 @@ internals.addNunjucksGlobals = function(env){
 
 internals.buildProduction = function(){
 
-    let buildCommand = `npm run build-prod --prefix ${ __dirname }`;
+    let buildCommand = `npm run build-prod --prefix ${ __dirname }\n\n`;
 
     try {
         process.stdout.write('execSync: ' + buildCommand);
@@ -258,7 +261,7 @@ internals.buildProduction = function(){
         throw err;
     }
 */
-    process.stdout.write('Client app: build successful!');
+    process.stdout.write('Client app: build successful!\n\n');
 };
 
 internals.findChunkNames = function(){

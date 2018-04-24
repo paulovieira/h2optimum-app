@@ -9,4 +9,4 @@ drop table t_users cascade;
 drop table t_devices cascade;
 drop table t_installations cascade;
 drop table t_triggers cascade;
-delete from _v.patches;
+--delete from _v.patches; delete only the patches from "app" (not "api")
