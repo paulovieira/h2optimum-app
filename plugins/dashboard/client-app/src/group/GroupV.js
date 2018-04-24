@@ -240,7 +240,8 @@ debugger
         return Q($.ajax({
             type: 'GET',
             //url: '/v1/get-readings',
-            url: domain + '/v1/get-measurements',
+            //url: domain + '/v1/get-measurements',
+            url: '/v1/get-measurements',
             data: {
                 //period: period
                 fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
