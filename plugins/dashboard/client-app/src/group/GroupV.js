@@ -234,14 +234,18 @@ debugger
 
         let currentDates = Radio.channel('dates').request('get');
         let period = DateFns.differenceInHours(internals.initialToDate, internals.initialFromDate)
-        let domain = window.h2optimum.isProduction ? 'http://api.2adapt.pt' : 'http://localhost:8000';
+
+        // the measurements are available only from the API domain (different than the one from this app)
+        let protocol = window.location.href.split(':')[0];
+        let domain = window.h2optimum.isProduction ? 'api.2adapt.pt' : 'localhost:8000';
+        domain = protocol + '://' + domain;
         
 
         return Q($.ajax({
             type: 'GET',
             //url: '/v1/get-readings',
-            //url: domain + '/v1/get-measurements',
-            url: '/v1/get-measurements',
+            url: domain + '/v1/get-measurements',
+            //url: '/v1/get-measurements',
             data: {
                 //period: period
                 fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
