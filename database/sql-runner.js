@@ -4,7 +4,7 @@ take into account the dependencies and incompatibilities
 */
 'use strict';
 
-require('_config/load');
+require('../config/load');
 
 const Path = require('path');
 const Fs = require('fs-extra');
