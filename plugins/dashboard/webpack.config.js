@@ -68,6 +68,7 @@ function getConfig(isProduction) {
                 //'billboard.js',
                 //'metrics-graphics',
                 'typeahead.js',
+                'plotly.js/lib/index-cartesian',
                 //'sweetalert2',
                 
                 // dedicated module to requiring .css files from third-party libs;
@@ -91,6 +92,15 @@ function getConfig(isProduction) {
 
         module: {
             rules: [
+            
+                {
+                    test: /\.js$/,
+                    use: [
+                        'ify-loader',
+                        //'transform-loader?plotly.js/tasks/util/compress_attributes.js',
+                    ]
+                },
+            
 
                 // disable the AMD loader for everything; exceptions can be added explicitely
                 // more info here: http://stackoverflow.com/questions/29302742/is-there-a-way-to-disable-amdplugin
@@ -234,7 +244,7 @@ function getConfig(isProduction) {
                         {
                             loader: 'htmlhint-loader',
                             options: {
-                                configFile: Path.join(__dirname, 'src', '.htmlhintrc.js')
+                                configFile: Path.resolve('.htmlhintrc.js')
                             }
                         }
                     ]
@@ -255,7 +265,7 @@ function getConfig(isProduction) {
                                         var __Nunjucks = require('nunjucks');
                                         
                                         // the path for the module is using an alias; check resolve.alias in webpack config;
-                                        var __env = require('config/nunjucks-env'); 
+                                        var __env = require('_config/nunjucks-env'); 
                                         
                                         // loaded with the raw-loader; check module.rules in webpack config;
                                         var __templateSrc = require(__filename.replace('js', 'html'));
@@ -305,7 +315,11 @@ function getConfig(isProduction) {
         
         resolve: {
             alias: {
-                'config': Path.resolve(__dirname, 'client-app/src/_config/')
+                //'config': Path.resolve(__dirname, 'client-app/src/_config/'),
+
+                '_config': Path.resolve('./client-app/src/_config/'),
+                '_common': Path.resolve('./client-app/src/_common/'),
+                '_entities': Path.resolve('./client-app/src/_entities/'),
             }
         }
     };

@@ -51,7 +51,9 @@ END IF;
 /*** BEGIN CODE FOR CHANGES  ***/
 
 insert into t_devices(user_id, installation_id, device_type_code, mac, activation_key, description) values 
-    (1, 1, 'device_sensor', 'aa:bb:cc:dd:ee:ff', '', 'device description Demo');
+    (2, 1, 'device_sensor', 'f8:f0:05:f7:df:1f', '', 'device description Demo'),
+    (3, 2, 'device_sensor', 'f8:f0:05:f5:e0:6e', '', 'device description Demo');
+    
 
 
 

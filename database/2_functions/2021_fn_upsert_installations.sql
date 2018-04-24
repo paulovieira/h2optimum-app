@@ -49,7 +49,7 @@ new_row.crop_type_code := COALESCE(new_row.crop_type_code, current_row.crop_type
 new_row.name           := COALESCE(new_row.name, current_row.name);
 new_row.slug           := COALESCE(new_row.slug, current_row.slug);
 new_row.description    := COALESCE(new_row.description, current_row.description);
-new_row.location       := COALESCE(new_row.location, current_row.location);
+new_row.location       := COALESCE(new_row.location, current_row.location, '{}'::jsonb);
 new_row.active         := COALESCE(new_row.active, current_row.active, true);
 
 

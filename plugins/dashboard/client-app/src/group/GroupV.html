@@ -1,6 +1,7 @@
 <!-- Main container -->
-<main class="main-container">
+<main class="main-container" >
 
+  {#
   <header class="header group-header" data-group-id="{{ groupId }}" style="margin-bottom: 0; xdisplay: flex;">
 
     <div style="margin: 30px 0; xborder: solid 1px; xwidth: 50%; left: 0;" class="header-info">
@@ -10,63 +11,62 @@
     </div>
 
   </header>
+  #}
 
 
-  <div class="main-content">
+  <div class="main-content" >
+
+  <div class="row">
+  <div class="offset-lg-1 col-lg-10">
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="text-primary" href="#/dashboard">Home</a></li>
+      <li class="breadcrumb-item active">{{ name }}</li>
+    </ol>
+
+
     <div class="row">
       
       <div class="col-sm-6">
 
-        <div class="card">
-          <header class="card-header card-inverse card-cyan" style="border-bottom: 0;">
-            <h5 class="card-title card-title-bold">Summary</h5>
+
+        <div class="card" >
+          <header class="card-header " style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Summary</h5>
+
           </header>
 
-          <div class="card-body" style="padding: 0">
+          <div class="card-body" style="padding-top: 0.5rem; ">
 
-            <div class="alert alert-summary" role="alert" style="" >
+            <table class="table table table-sm table-hover">
 
-              <span data-id="status-text">
-                <h5 style="display: inline;" data-id="status-text">Status:</h5>
-                <span style="font-size: 14px;">{{ statusMessage }} {{ statusMessage2 }}</span>
-              </span>
+              <tbody>
 
-              <label class="switch switch-lg" >
-                <input type="checkbox" data-id="checkbox-switch-status">
-                <span class="switch-indicator"></span>
-                <span class="switch-description"></span>
-              </label>
+                <tr>
+                  <td style="border-top: none;">
+                    Status: on (4:23 to finish)
+                    <label class="switch switch-lg" style="float: right;">
+                      <input type="checkbox" data-id="checkbox-switch-status">
+                      <span class="switch-indicator xbg-info" style=""></span>
+                      <span class="switch-description"></span>
+                    </label>
 
-            </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: none;">Diagnostics: ok wefgwe fwef we fwefiowen fiowen fiownefoi weiofnw
+                  <button class="btn btn-sm btn-bold btn-info " style="float: right">Details</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: none;">Soil type: {{ soilTypeCode }}</td>
+                </tr>
+                <tr>
+                  <td style="border-top: none;">Crop type: {{ cropTypeCode }}</td>
+                </tr>
 
-            <div class="alert alert-summary" role="alert" style="border-top: 0" >
-
-              <span class="text-truncate"  data-id="diagnostic-text">
-                <h5 style="display: inline;" data-id="diagnostic-text">Diagnostics:</h5>
-                <span style="font-size: 14px;">{{ diagnosticMessage }} {{ diagnosticMessage2 }}</span>
-              </span>
-
-              <button class="btn btn-sm btn-bold btn-cyan" style="margin-left: 10px; ">Details</button>
-
-            </div>
-
-            <div class="alert alert-summary" role="alert" style="border-top: 0" >
-
-              <span class="" >
-                <h5 style="display: inline;">Soil type:</h5>
-                <span style="font-size: 14px;">{{ soilTypeCode }} </span>
-              </span>
-
-            </div>
-
-            <div class="alert alert-summary" role="alert" style="border-top: 0" >
-
-              <span class="" >
-                <h5 style="display: inline;">Crop type:</h5>
-                <span style="font-size: 14px;">{{ cropTypeCode }} </span>
-              </span>
-
-            </div>
+              </tbody>
+            </table>
 
           </div>
         </div>
@@ -84,9 +84,20 @@
       
       <div class="col-sm-12">
 
+
+
+      </div>
+    </div>
+
+
+
+    <div class="row">
+      
+      <div class="col-xl-6">
+
         <div class="card" >
-          <header class="card-header card-inverse card-cyan" style="padding: 11px 20px;">
-            <h5 class="card-title card-title-bold">Measurements</h5>
+          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Measurements</h5>
 
             <div class="input-group" style="width: inherit;">
               <input type="text" class="form-control" data-id="flatpickr-datepicker" >
@@ -115,15 +126,12 @@
         </div>
       
       </div>
-    </div>
 
-    <div class="row">
-      
-      <div class="col-sm-12">
+      <div class="col-xl-6">
 
         <div class="card" >
-          <header class="card-header card-inverse card-cyan" style="padding: 11px 20px;">
-            <h5 class="card-title card-title-bold">Battery</h5>
+          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Battery</h5>
             
             <div class="input-group" style="width: inherit;">
               <input type="text" class="form-control" data-id="flatpickr-datepicker" >
@@ -154,16 +162,18 @@
       </div>
     </div>
 
+
+
     <div class="row">
       <div class="col-sm-12">
 
         <div class="card" >
-          <header class="card-header card-inverse card-cyan" style="padding: 11px 20px;">
-            <h5 class="card-title card-title-bold">Automatisms</h5>
+          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Automations</h5>
 
             <button class="btn btn-sm btn-bold" data-id="add-automatism">
               <i class="fa fa-plus-circle" style="font-size: 1.3em; vertical-align: text-bottom;"></i>
-              Add new automatism
+               New
             </button>
 
           </header>
@@ -225,6 +235,8 @@
     </div>
   </div>
 
+  </div>
+  </div>
 
 
   <footer class="site-footer" data-region-id="footer"></footer>

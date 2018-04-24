@@ -1,17 +1,22 @@
 let $ = require('jquery');
 let Q = require('q');
+let _ = require('underscore');
 let Backbone = require('backbone');
 let Mn = require('backbone.marionette');
-var Radio = require('backbone.radio');
-var Flatpickr = require('flatpickr')
-var DateFns = require('date-fns');
-var Billboard = require('billboard.js');
+let Radio = require('backbone.radio');
+let Flatpickr = require('flatpickr')
+let DateFns = require('date-fns');
+//let Billboard = require('billboard.js');
+let Plotly = require('plotly.js/lib/index-cartesian')
+let UtilsPlotly = require('_common/utils-plotly');
 
-var Utils = require('../_common/utils');
-//var AddNewControllerV = require('./AddNewControllerV');
+let Billboard = {}
+
+let Utils = require('../_common/utils');
+//let AddNewControllerV = require('./AddNewControllerV');
 let DevicesListV = require('../devices/DevicesListV')
-var AddNewAutomatismV = require('./AddNewAutomatismV');
-///var PopoverConfig = require('../_config/popover');
+let AddNewAutomatismV = require('./AddNewAutomatismV');
+///let PopoverConfig = require('../_config/popover');
 
 let internals = {};
 internals.measurementPeriodInMinutes = 20;
@@ -38,6 +43,12 @@ let View = Mn.View.extend({
         //Radio.channel('popover').on('popover:item:clicked', function(popoverId){
         //    debugger
         //});
+
+        this.listenTo(Radio.channel('public'), 'refresh:devices', () => {
+
+            this.fetchData();
+        })
+
     },
 
     ui: {
@@ -46,7 +57,7 @@ let View = Mn.View.extend({
         'main-content': 'div.main-content',
         'checkbox-switch-status': '[data-id="checkbox-switch-status"]',
         'status-text': '[data-id="status-text"]',
-        'add-controller': '[data-id="add-controller"]',
+        ///'add-controller': '[data-id="add-controller"]',
         'datepicker': 'input[data-id="flatpickr-datepicker"]',
         'datepicker-option': '[data-id="datepicker-select"] > a.dropdown-item',
         'chart-container': '[data-id="chart-container"]',
@@ -57,7 +68,7 @@ let View = Mn.View.extend({
 
     events: {
         'change @ui.checkbox-switch-status': 'onChangeStatus',
-        'click @ui.add-controller': 'onClickAddController',
+        ///'click @ui.add-controller': 'onClickAddController',
         'click @ui.datepicker-option': 'setDatepickerSelection',
         'click @ui.add-automatism': 'onClickAddAutomatism',
     },
@@ -75,7 +86,6 @@ let View = Mn.View.extend({
 
         Radio.channel('dates').request('set', [initialFromDate, initialToDate]);
 
-
         let devicesM = new Backbone.Model({
             slug: this.model.get('slug'),
             installationId: this.model.get('id'),
@@ -88,18 +98,17 @@ let View = Mn.View.extend({
 
     onRender: function () {
 
-        var data = this.fetchData();
+        //var data = this.fetchData();
         ///this.getUI('controller-options').popover(PopoverConfig.controller);
 
 
     },
 
-    fetchData: function () {
+    // fetchData: function () {
 
-        var data = Radio.channel('public').request('controllerGroups');
-
-        return data;
-    },
+    //     var data = Radio.channel('public').request('controllerGroups');
+    //     return data;
+    // },
 
     onChangeStatus: function (ev) {
 
@@ -109,7 +118,9 @@ let View = Mn.View.extend({
         this.getUI('status-text').css('color', color)
     },
 
+    /*
     onClickAddController: function (ev) {
+debugger
 
         var addNewControllerV = new AddNewControllerV({
             onCloseModal: options => {
@@ -119,8 +130,9 @@ let View = Mn.View.extend({
         });
 
         Utils.showAsModal(addNewControllerV, 'small');
-    },
 
+    },
+*/
     onClickAddAutomatism: function (ev) {
 
         var addNewAutomatismV = new AddNewAutomatismV({
@@ -174,7 +186,7 @@ let View = Mn.View.extend({
             if (!Array.isArray(dates)) { return }
 
             this._dates = dates;
-            view.refreshBillboardChart();
+            view.fetchData();
 
             if (triggerChangeOnDatepicker) {
                 view.flatpickr.setDate(dates, triggerChangeOnDatepicker);
@@ -218,7 +230,7 @@ let View = Mn.View.extend({
     },
 
     
-    getReadings: function () {
+    getReadings: function (deviceMac) {
 
         let currentDates = Radio.channel('dates').request('get');
         let period = DateFns.differenceInHours(internals.initialToDate, internals.initialFromDate)
@@ -233,7 +245,8 @@ let View = Mn.View.extend({
                 //period: period
                 fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
                 toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
-                deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
+                //deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
+                deviceMac: deviceMac
             },
         }))
 
@@ -247,6 +260,14 @@ let View = Mn.View.extend({
     },
 
     computeWPQuadratic: function (resistance, temp){
+
+        if (resistance > 12000 || resistance < 0) {
+            return null;
+        }
+
+        if (temp > 60 || resistance < -20) {
+            return null;
+        }
 
         let wp = 0;
         resistance = resistance / 1000;
@@ -264,8 +285,14 @@ let View = Mn.View.extend({
         return Math.abs(wp);
     },
 
-    refreshBillboardChart: function() {
+    fetchData: function() {
 
+        let devices = Radio.channel('public').request('devices');
+
+        if (devices === undefined) {
+            return
+        }
+/*
         var ts = this.generateTs();
         ts.unshift('ts');
 
@@ -280,7 +307,7 @@ let View = Mn.View.extend({
         data2.unshift('f8:f0:05:f7:df:1f-quadratic')
         data3.unshift('f8:f0:05:f5:e0:6e-linear')
         data4.unshift('f8:f0:05:f5:e0:6e-quadratic')
-        
+        */
 
         //let currentDates = Radio.channel('dates').request('get');
         //xxx
@@ -298,8 +325,91 @@ let View = Mn.View.extend({
         poco2.unshift('Poço 2');
         poco3.unshift('Poço 3');
 */
-        // hardcoded
-        Q(this.getReadings()).then(response => { 
+
+    
+        //devices.push({ mac: 'f8:f0:05:f5:e0:6c'});
+        Q.all(devices.map(obj => this.getReadings(obj.mac))).then(responses => { 
+
+            // responses is an array of arrays (each inner array if relative to 1 device/mac)
+            let allMacs = [];
+            
+            responses.forEach((responseMac, i) => {
+
+                // handle the case of not having any reading for some device
+                if (responseMac.length === 0) {
+                    responses[i] = undefined;
+                    return;
+                }
+
+                allMacs.push(responseMac[0].device_id);
+            });
+            
+            responses = _.compact(responses);
+
+            // main array of arrays for the chart
+            let data = {};
+
+            // main loop
+            allMacs.forEach((mac, i) => {
+//debugger
+                // array of array relative to the data for this device/mac (will be copied to the main array declared above);
+                // the inner array will have: ts; wp1, wp2, wp3, battery
+                let dataMac = [[], [], [], [], []];
+                let readingsMac = responses[i];
+
+                let readingsTemp = readingsMac.filter(obj => obj.type === 't');
+                // TODO: exclude outliers for temperature
+
+                readingsTemp.forEach(objTemp => {
+//debugger
+                    // get the batch of wp reading relative to this temp. reading;
+                    // normally we should 5 elements in a batch: 1 temp + 3 wp + 1 batt (here we filtering only for the 3 wp)
+                    let readingsBatch = readingsMac.filter(obj => {
+
+                        return Math.abs(DateFns.differenceInMilliseconds(objTemp.ts, obj.ts)) < 100 && (obj.type === 'h' || obj.type === 'b');
+                    })
+
+                    // store ts and battery
+                    dataMac[0].push(objTemp.ts);
+
+                    let l = readingsBatch.length;
+                    for (let j = 0; j < l; j++) {
+                        let obj = readingsBatch[j];
+
+                        if (obj.type !== 'b') { continue }
+
+                        dataMac[4].push(obj.val);
+                    }
+
+
+                    for (let j = 0; j < l; j++) {
+                        let obj = readingsBatch[j];
+
+                        if (obj.type !== 'h') { continue }
+
+                        // wp reading shouls have sid 2, 3, or 4 (TODO: what if it doesn't have?)
+                        if (obj.sid <= 1 || obj.sid >= 5) {
+                            throw new Error('invalid sid: ' + obj.sid);
+                        }
+
+                        // ntoe that computeWPQuadratic will check the input value to exclude outliers
+                        dataMac[obj.sid - 1].push(this.computeWPQuadratic(obj.val, objTemp.val));
+                    }
+                })
+
+                data[mac] = dataMac;
+            })
+
+            this.refreshPlotly(data);
+            this.refreshPlotlyBattery(data);
+
+
+
+
+            /*
+            for (let key in data) {
+                data[key] 
+            }
 
             let ts = [];
             let data1 = [];
@@ -307,7 +417,7 @@ let View = Mn.View.extend({
             let data3 = [];
             let data4 = [];
 
-            internals.response = response;
+            internals.response = responses[0];
 
             // loop for wp
             for (let i = 0; i < internals.response.length; i++) {
@@ -428,6 +538,7 @@ let View = Mn.View.extend({
                     data2Battery,
                 ]
             })
+            */
 
             
         })
@@ -441,17 +552,8 @@ let View = Mn.View.extend({
         //     })
         // }, 1000)
 
+        /*
 
-/*
-        var tsGrid = ts.map((dateStr, i) => { 
-
-            if (i === 0) { return 'tsGrid' }
-
-            return DateFns.
-        } )
-
-        ['tsGrid'], '2018-02-01', '2018-02-02', '2018-02-03', '2018-02-04']
-*/
         this.chart = Billboard.bb.generate({
             bindto: this.getUI('chart-container').get(0),
 
@@ -478,33 +580,17 @@ let View = Mn.View.extend({
                     // 'poco2': 'line',
                     // 'poco3': 'line',
                 },
-                /*
-                classes: {
-                    centro1: 'centro1',
-                    centro2: 'centro2',
-                    centro3: 'centro3',
-                }
-                */
+                
+                // classes: {
+                //     centro1: 'centro1',
+                //     centro2: 'centro2',
+                //     centro3: 'centro3',
+                // }
+                
                 
             },
             zoom: {
                 enabled: true,
-/*
-                rescale: true,
-                onzoom: function(domain, x, y, z) { 
-                    debugger
-                },
-                onzoomstart: function(domain, x, y, z) { 
-                    debugger
-                },
-                */
-                onzoomend: function(domain, x, y, z) { 
-
-                    var extent = chart.zoom();
-                    // TODO: update the ticks manualy according to the new zoom
-                }
-                
-
             },
             // see: https://github.com/eventbrite/britecharts/blob/master/src/charts/helpers/colors.js
             
@@ -545,12 +631,12 @@ let View = Mn.View.extend({
                     }
                 },
                 y: {
-                    /*
-                    label: {
-                        text: 'Revenue',
-                        position: 'outer-middle'
-                    },
-                    */
+                    
+                    // label: {
+                    //     text: 'Revenue',
+                    //     position: 'outer-middle'
+                    // },
+                    
 
                     // TODO: adjust the padding taking into account the min valur: if the min is 'far' from 0, we should add some more
                     // padding
@@ -589,7 +675,11 @@ let View = Mn.View.extend({
             }
         });
 
+        */
 
+
+
+        /*
 
         var tsBattery = this.generateTs();
         tsBattery.unshift('tsBattery');
@@ -626,33 +716,17 @@ let View = Mn.View.extend({
                     // 'poco2': 'line',
                     // 'poco3': 'line',
                 },
-                /*
-                classes: {
-                    centro1: 'centro1',
-                    centro2: 'centro2',
-                    centro3: 'centro3',
-                }
-                */
+                
+                //classes: {
+                //    centro1: 'centro1',
+                //    centro2: 'centro2',
+                //    centro3: 'centro3',
+                //}
+                
                 
             },
             zoom: {
                 enabled: true,
-/*
-                rescale: true,
-                onzoom: function(domain, x, y, z) { 
-                    debugger
-                },
-                onzoomstart: function(domain, x, y, z) { 
-                    debugger
-                },
-                */
-                onzoomend: function(domain, x, y, z) { 
-
-                    var extent = chart.zoom();
-                    // TODO: update the ticks manualy according to the new zoom
-                }
-                
-
             },
             // see: https://github.com/eventbrite/britecharts/blob/master/src/charts/helpers/colors.js
             
@@ -693,12 +767,7 @@ let View = Mn.View.extend({
                     }
                 },
                 xxxy: {
-                    /*
-                    label: {
-                        text: 'Revenue',
-                        position: 'outer-middle'
-                    },
-                    */
+                    
 
                     // TODO: adjust the padding taking into account the min valur: if the min is 'far' from 0, we should add some more
                     // padding
@@ -736,6 +805,216 @@ let View = Mn.View.extend({
                 height: 300
             }
         });
+        */
+    },
+
+    refreshPlotly: function(dataRaw) {
+
+        // array of traces (plotly objects)
+        let data = [];
+        let devices = Radio.channel('public').request('devices');
+
+        for (let key in dataRaw) {
+            //debugger
+            let device = devices.filter(obj => obj.mac === key)[0]
+
+            for (let i = 1; i <= 3; i++) {
+                let trace = $.extend(true, {}, UtilsPlotly.getTraceBase());
+                trace.name = device.description + '_' + i;
+                trace.x = dataRaw[key][0];
+                trace.y = dataRaw[key][i];
+
+                data.push(trace);
+            }
+        }
+
+        let layoutOptions = {
+
+            //title:'Adding Names to Line and Scatter Plot',
+            dragmode: 'pan',
+            yaxis: {
+                title: 'water potential',
+                //tickformat: 's', // "decimal notation with an SI prefix, rounded to significant digits."
+                // more details here: https://github.com/d3/d3-format
+                // see also: 'd3-format specifiers example': http://bl.ocks.org/zanarmstrong/05c1e95bf7aa16c4768e
+                
+                fixedrange: true, // disable zoom for y-axis
+                hoverformat: '.3s'
+
+            },
+            xaxis: {
+                type: 'date',
+                //rangemode: 'tozero',
+                tickformatstops:
+                [
+                /*
+                    {
+                        dtickrange: [null, 1000],
+                        value: "%H:%M:%S.%L"
+                    },
+                    */
+                    {
+                        dtickrange: [null, 1000 * 60 * 60 * 24],
+                        value: "%b %e %H:%M"
+                    }
+                ],
+
+            },
+            height: 350,  // probably should be computed dynamically, according to the width of the screen
+            margin: {
+                l: 70,
+                r: 50,
+                b: 35,
+                t: 0,
+                pad: 18
+            },
+
+            /*
+            legend: {
+                orientation: 'h'
+            }
+            */
+        };
+
+
+        let options = {
+            scrollZoom: true,
+            displaylogo: false,
+            //showLink: false,
+            modeBarButtons: [
+                ['autoScale2d', 'zoomIn2d', 'zoomOut2d']
+            ],
+        }
+
+        let gd = this.gd = this.getUI('chart-container').get(0);
+
+        Plotly.newPlot(gd, data, layoutOptions, options);
+
+
+        let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
+
+        // based on this example: https://codepen.io/etpinard/pen/vXrRLR
+        // internals.isUnderRelayout = false;
+        // internals.previousRange = {
+        //     'xaxis.range[0]': currentPeriod[0],
+        //     'xaxis.range[1]': currentPeriod[1]
+        // };
+
+        /*
+        this.isUnderRelayout = false;
+        this.previousRange = {
+            'xaxis.range[0]': currentPeriod[0],
+            'xaxis.range[1]': currentPeriod[1]
+        };
+
+        gd.on('plotly_relayout', UtilsPlotly.updateRangeOnZoomOut.bind(this))
+        */
+
+
+    },
+
+    refreshPlotlyBattery: function(dataRaw) {
+
+        // array of traces (plotly objects)
+        let data = [];
+        let devices = Radio.channel('public').request('devices');
+
+        for (let key in dataRaw) {
+            //debugger
+            let device = devices.filter(obj => obj.mac === key)[0]
+
+            let trace = $.extend(true, {}, UtilsPlotly.getTraceBase());
+            trace.marker.size = 2;
+            trace.name = device.description;
+            trace.x = dataRaw[key][0];
+            trace.y = dataRaw[key][4];
+
+
+            data.push(trace);
+        }
+        
+        let layoutOptions = {
+
+            //title:'Adding Names to Line and Scatter Plot',
+            dragmode: 'pan',
+            yaxis: {
+                title: 'battery',
+                //tickformat: 's', // "decimal notation with an SI prefix, rounded to significant digits."
+                // more details here: https://github.com/d3/d3-format
+                // see also: 'd3-format specifiers example': http://bl.ocks.org/zanarmstrong/05c1e95bf7aa16c4768e
+                
+                fixedrange: true, // disable zoom for y-axis
+                hoverformat: '.3s'
+
+            },
+            xaxis: {
+                type: 'date',
+                //rangemode: 'tozero',
+                tickformatstops:
+                [
+                /*
+                    {
+                        dtickrange: [null, 1000],
+                        value: "%H:%M:%S.%L"
+                    },
+                    */
+                    {
+                        dtickrange: [null, 1000 * 60 * 60 * 24],
+                        value: "%b %e %H:%M"
+                    }
+                ],
+
+            },
+            height: 350,  // probably should be computed dynamically, according to the width of the screen
+            margin: {
+                l: 70,
+                r: 50,
+                b: 35,
+                t: 0,
+                pad: 18
+            },
+
+            /*
+            legend: {
+                orientation: 'h'
+            }
+            */
+        };
+
+        let options = {
+            scrollZoom: true,
+            displaylogo: false,
+            //showLink: false,
+            modeBarButtons: [
+                ['autoScale2d', 'zoomIn2d', 'zoomOut2d']
+            ],
+        }
+
+        let gd = this.gd = this.getUI('chart-container-battery').get(0);
+
+        Plotly.newPlot(gd, data, layoutOptions, options);
+
+
+        let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
+
+        // based on this example: https://codepen.io/etpinard/pen/vXrRLR
+        // internals.isUnderRelayout = false;
+        // internals.previousRange = {
+        //     'xaxis.range[0]': currentPeriod[0],
+        //     'xaxis.range[1]': currentPeriod[1]
+        // };
+
+        /*
+        this.isUnderRelayout = false;
+        this.previousRange = {
+            'xaxis.range[0]': currentPeriod[0],
+            'xaxis.range[1]': currentPeriod[1]
+        };
+
+        gd.on('plotly_relayout', UtilsPlotly.updateRangeOnZoomOut.bind(this))
+        */
+
+
     },
 
     generateTs: function () {

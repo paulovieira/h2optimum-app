@@ -1,10 +1,10 @@
-<div class="card" >
-  <header class="card-header card-inverse card-cyan" style="padding: 11px 20px;">
-    <h5 class="card-title card-title-bold">Units</h5>
+<div class="card card-inverse card-info" >
+  <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+    <h5 class="card-title card-title-bold" style="font-weight: 300;">Devices</h5>
 
     <button class="btn btn-sm btn-bold" data-id="add-controller">
       <i class="fa fa-plus-circle" style="font-size: 1.3em; vertical-align: text-bottom;"></i>
-      Add new unit
+       new 
     </button>
 
   </header>
@@ -20,7 +20,7 @@
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody data-id="devices">
 
         {% for obj in collection %}
         <tr>

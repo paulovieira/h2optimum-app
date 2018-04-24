@@ -4,6 +4,7 @@ drop table t_crop_types cascade;
 drop table t_trigger_types cascade;
 drop table t_action_types cascade;
 drop table t_device_types cascade;
+drop table t_battery_modes cascade;
 drop table t_users cascade;
 drop table t_devices cascade;
 drop table t_installations cascade;

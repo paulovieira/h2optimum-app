@@ -16,11 +16,11 @@ _id      := COALESCE((options->>'id')::int);
 _user_id := COALESCE((options->>'userId')::int);
 
 if _id is null then
-  PERFORM raise_exception_invalid_or_missing_args('read_measurements', 'id');
+  PERFORM raise_exception_invalid_or_missing_args('delete_devices', 'id');
 end if;
 
 if _user_id is null then
-  PERFORM raise_exception_invalid_or_missing_args('read_measurements', 'userId');
+  PERFORM raise_exception_invalid_or_missing_args('delete_devices', 'userId');
 end if;
 
 

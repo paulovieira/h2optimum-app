@@ -10,11 +10,16 @@
 
 
 
+        <!-- <div style="background-color: red; width: 100%; height: 60px;">xyz</div> -->
+
         <!-- Sidebar -->
         <aside class="sidebar sidebar-icons-right sidebar-icons-boxed sidebar-expand-lg">
           <header class="sidebar-header xtext-center bg-info" style="display: block;">
-
-             <h2 class="center-vh ls-2 fw-300" style="margin: 0; padding: 0; color: white; text-transform: uppercase;">H2Optimum</h2>
+{#
+             <h2 class="center-vh ls-2 fw-300" style="margin: 0; padding: 0; color: white; text-transform: uppercase;">xxx<!-- H2Optimum --> </h2>
+             #}
+             
+            <a class="logo-icon" href="#"><img class="xmx-auto xd-block img-fluid" style="max-height: 80%" src="/dashboard/dist/2AdaPt-first.png" alt="logo icon"></a> 
             <!--
             <a class="logo-icon" href="../index.html"><img src="../assets/img/logo-icon-light.png" alt="logo icon"></a>
             <span class="logo">
@@ -30,22 +35,22 @@
               <li class="menu-item">
                 <a class="menu-link" href="#/dashboard">
                   <span class="icon fa fa-home"></span>
-                  <span class="title">Dashboard</span>
+                  <span class="title" style="text-transform: uppercase; letter-spacing: 1px;">Dashboard</span>
                 </a>
               </li>
 
               <li class="menu-item">
                 <a class="menu-link" href="#">
                   <span class="icon fa fa-tint"></span>
-                  <span class="title">Groups</span>
+                  <span class="title" style="text-transform: uppercase; letter-spacing: 1px;">My Sensors</span>
                   <span class="arrow"></span>
                 </a>
 
-                <ul class="menu-submenu">
+                <ul class="menu-submenu" style="background-color: #f4f4f4;">
                   <li class="menu-item">
                     <a class="menu-link" href="#/groups/permalab">
                       <span class="icon">PL</span>
-                      <span class="title">Permalab</span>
+                      <span class="title" >Permalab</span>
                     </a>
                   </li>
 
@@ -76,12 +81,27 @@
 
 
               <li class="menu-item">
-                <a class="menu-link" href="#">
+                <a class="menu-link" href="#forecast">
                   <span class="icon fa fa-cog"></span>
-                  <span class="title">Settings</span>
+                  <span class="title" style="text-transform: uppercase; letter-spacing: 1px;">Forecast</span>
                 </a>
               </li>
 
+
+              <li class="menu-item">
+                <a class="menu-link" href="#statistics">
+                  <span class="icon fa fa-cog"></span>
+                  <span class="title" style="text-transform: uppercase; letter-spacing: 1px;">Statistics</span>
+                </a>
+              </li>
+
+
+              <li class="menu-item">
+                <a class="menu-link" href="#reporting">
+                  <span class="icon fa fa-cog"></span>
+                  <span class="title" style="text-transform: uppercase; letter-spacing: 1px;">Reporting</span>
+                </a>
+              </li>
 
               
 
@@ -90,7 +110,7 @@
               <li class="menu-item">
                 <a class="menu-link" href="#">
                   <span class="icon fa fa-question-circle"></span>
-                  <span class="title">Help</span>
+                  <span class="title" style="text-transform: uppercase; letter-spacing: 1px;">Help</span>
                 </a>
                 {#
                 <ul class="menu-submenu">
@@ -122,7 +142,7 @@
 
 
         <!-- Topbar -->
-        <header class="topbar">
+        <header class="topbar" style="background-color: #fafafa">
           <div class="topbar-left">
           {#
 

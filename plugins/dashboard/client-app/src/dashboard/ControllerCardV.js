@@ -22,7 +22,7 @@ var View = Mn.View.extend({
     createMap: function () {
 
         let map = L.map(this.getUI('map').get(0), { attributionControl: false });
-        var center = this.model.get('center');
+        var center = this.model.get('location');
 
         map.setView(center, 13);
 

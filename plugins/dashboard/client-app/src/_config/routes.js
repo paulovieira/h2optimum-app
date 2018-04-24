@@ -64,7 +64,7 @@ exports.group = {
             view: require('../group/GroupV'),
             region: 'for-main-container',
             handler: function(viewClass, viewOptions){
-
+//debugger
                 var requestData = viewOptions.request;
                 viewOptions.request._ts = Date.now();
                 var data = Radio.channel('public').request('installations');

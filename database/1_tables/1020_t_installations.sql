@@ -46,9 +46,8 @@ END IF;
 /*** BEGIN CODE FOR CHANGES  ***/
 
 insert into t_installations(user_id, soil_type_code, crop_type_code, name, slug, description) values 
-    (1, 'soil_sandy_loam', 'crop_corn', 'Permalab Demo', 'permalab-demo', ''),
-    (1, 'soil_type_X', 'crop_type_X', 'Milho 1 Demo', 'milho-1-demo', ''),
-    (1, 'soil_type_Y', 'crop_type_Y', 'Milho 2 Demo', 'milho-2-demo', '');
+    (2, 'soil_type_x', 'crop_type_x', 'Permalab - demo', 'permalab-demo', ''),
+    (3, 'soil_type_x', 'crop_type_x', 'Casa do Lecas - demo', 'casa-do-lecas-demo', '');
 
 
 /*** END CODE FOR CHANGES  ***/

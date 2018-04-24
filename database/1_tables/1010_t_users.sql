@@ -18,7 +18,7 @@ create table t_users(
     last_name text,
     pw_hash text not null,
     created_at timestamptz not null default now(),
-    active bool default true,
+    active bool default true
     --recover_code text,  TODO: create a separate table with recover_codes: user_id, recover_code, recover_code_created_at
     --recover_code_created_at timestamptz
 );
@@ -44,8 +44,10 @@ END IF;
 /*** BEGIN CODE FOR CHANGES  ***/
 
 insert into t_users(email, first_name, last_name, pw_hash) values 
-    ('jose@gmail.com', 'jose', 'silva', '_abc'),
-    ('jose2@gmail.com', 'jose 2', 'silva 2', '_abc');
+    ('admin', 'admin', '', ''),
+    ('demo1', 'demo1', '', ''),
+    ('demo2', 'demo2', '', ''),
+    ('dick', 'dick', '', '');
 
 
 

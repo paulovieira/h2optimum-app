@@ -45,9 +45,9 @@ insert into t_soil_types(code, description) values
     ('soil_light_texture_silt_loam', 'light texture silt loam'),
     ('soil_heavier_texture_silt_loam', 'heavier texture silt loam'),
     ('soil_fine_sand', 'fine sand'),
-    ('soil_type_X', 'soil type X description'),
-    ('soil_type_Y', 'soil type Y description'),
-    ('soil_type_Z', 'soil type Z description');
+    ('soil_type_x', 'soil type X description'),
+    ('soil_type_y', 'soil type Y description'),
+    ('soil_type_z', 'soil type Z description');
 
 /*** END CODE FOR CHANGES  ***/
 

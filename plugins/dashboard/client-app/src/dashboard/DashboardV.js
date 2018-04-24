@@ -2,7 +2,7 @@ let $ = require('jquery');
 let Backbone = require('backbone');
 let Mn = require('backbone.marionette');
 var Radiox = require('backbone.radio');
-
+let  Q = require('q');
 let ControllerCardV = require('./ControllerCardV')
 let NewControllerCardV = require('./NewControllerCardV')
 
@@ -20,6 +20,12 @@ let View = Mn.View.extend({
     className: 'main-container',
 
     initialize: function(){
+
+        this.fetchAndRender();
+        this.listenTo(Radio.channel('public'), 'refresh:installations', () => { 
+
+            this.fetchAndRender();
+        });
     },
 
     ui: {
@@ -31,9 +37,20 @@ let View = Mn.View.extend({
         'footer': '@ui.footer',
     },
 
+    fetchAndRender: function(){
+
+        this.fetchData()
+            .then(() => { this.render() })
+
+    },
+
     onRender: function () {
 
-        var data = this.fetchData();
+        let data = Radio.channel('public').request('installations');
+
+        if(data === undefined) {
+            return
+        }
 
         // we'll always have at least 1 card (the "add controller" card)
         /*
@@ -98,14 +115,71 @@ let View = Mn.View.extend({
 
     fetchData: function () {
 
-        var data = Radio.channel('public').request('installations');
-        var newController = [{
-            type: 'new',
-            name: 'New controller',
-            description: 'Click to add a new group',
-        }]
+        let p = Q($.ajax({
+            url: '/api/get-installations',
+            type: 'GET',
+            data: {},
+        }));
 
-        return data.concat(newController);
+
+    /*
+            active:         true
+                cropTypeCode:         "crop_corn"
+                description:         "desc"
+                id:         5
+                location:         {}
+                name:         "my installation xyz"
+                slug:         "my-installation-xyz-442f"
+                soilTypeCode:         "soil_loam"
+            userId:         2
+    */
+
+    /*
+            // the type of controller (or "group controller") can be "switch", "sensor", "mixed" or "new"
+            let dummyInstallations = [
+                {
+                        id: 1,
+                    type: 'switch',
+                        slug: 'permalab',
+                        name: 'Permalab',
+                        description: '&nbsp;',
+                    statusCode: 1,
+                    statusMessage: 'on',
+                    statusMessage2: '(4h23m to finish)',
+                    diagnosticCode: 0,
+                    diagnosticMessage: 'ok',
+                    diagnosticMessage2: 'wefgwe fwef we fwefiowen fiowen fiownefoi weiofnwioe fniowe nfiown fiowfeiow ofi wof wiof owifw nio',
+                    center: [51.505, -0.09],
+                        soilTypeCode: 'soil_sandy_loam',
+                        cropTypeCode: 'crop_corn'
+
+                },
+            ];
+    */
+
+
+        p = p.then(installations => {
+            
+            var newController = [{
+                type: 'new',
+                name: 'New installation',
+                description: 'Click to add a new installation',
+            }]
+
+            installations = installations.concat(newController);
+
+            // TODO: location is location
+            installations.forEach(obj => { obj.location = [51.505, -0.09] })
+
+            Radio.channel('public').reply('installations', installations);
+
+
+        })
+
+//        p = p.done(undefined, err => { debugger; throw err });
+
+        return p;
+
     }
 });
 

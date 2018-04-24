@@ -1,11 +1,13 @@
+<!-- htmlhint spec-char-escape: false, tag-pair: false  -->
+
 
 <div class="modal-header">
-    <h4 class="modal-title">
+    <h4 class="modal-title" style="font-weight: 300;">
 
     {% if id > 0 %}
-        Edit unit
+        Edit device
     {% else %}
-        New unit
+        New device
     {% endif %}
     
     </h4>
@@ -53,6 +55,6 @@
 
 <div class="modal-footer">
     <button type="button" class="btn btn-bold btn-secondary" data-id="close">Close</button>
-    <button type="button" class="btn btn-bold btn-primary" data-id="save">Save</button>
+    <button type="button" class="btn btn-bold btn-info" data-id="save">Save</button>
 </div>
 

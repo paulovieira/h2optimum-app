@@ -6,22 +6,22 @@ let Joi = require('joi');
 let _ = require('underscore')
 let Hoek = require('hoek')
 let Boom = require('boom')
+let Slug = require('slug')
 let Utils = require('../../common/utils');
 let Db = require('../../database');
 
 let internals = {};
 
-internals.devicesSchema = Joi.object({
+internals.installationsSchema = Joi.object({
     id: Joi.number().integer(),
     // userId: Joi.number().integer(),  
-    installationId: Joi.number().integer(),
-    deviceTypeCode: Joi.string().allow(['device_sensor', 'device_switch', 'device_mixed']),
-    batteryModeCode: Joi.string().allow(['battery_normal', 'battery_eco', 'battery_standby']),
-    mac: Joi.string(),
-    activationKey: Joi.string().allow(''),
+    soilTypeCode: Joi.string().allow(['soil_loam', 'soil_sandy_loam', 'soil_light_texture_silt_loam', 'soil_heavier_texture_silt_loam', 'soil_fine_sand', 'soil_type_x', 'soil_type_y', 'soil_type_z']).required(),
+    cropTypeCode: Joi.string().allow(['crop_corn', 'crop_fruits', 'crop_wheat', 'crop_grapes', 'crop_type_x', 'crop_type_y', 'crop_type_z']).required(),
+    name: Joi.string().required(),
+    //slug: Joi.string().allow(''),
     description: Joi.string().allow(''),
-    // last_reading: : Joi.date()
-    active: Joi.bool()
+    //location TBD
+    active:  Joi.bool()
 });
 
 // the keys are the keys of the output object (that is, the columns in the database)
@@ -29,13 +29,12 @@ internals.devicesSchema = Joi.object({
 internals.APItoDB = {
     'id': 'id',
     'user_id': 'userId',
-    'installation_id': 'installationId',
-    'device_type_code': 'deviceTypeCode',
-    'battery_mode_code': 'batteryModeCode',
-    'mac': 'mac',
-    'activation_key': 'activationKey',
+    'soil_type_code': 'soilTypeCode',
+    'crop_type_code': 'cropTypeCode',
+    'name': 'name',
+    'slug': 'slug',
     'description': 'description',
-    'last_reading': 'lastReading',
+    'location': 'location',
     'active': 'active',
 };
 
@@ -43,30 +42,28 @@ internals.DBtoAPI = _.invert(internals.APItoDB);
 
 exports.register = function (server, options, next){
 
-    // 1 - read devices
+    // 1 - read installations
 
     server.route({
-        path: '/api/get-devices',
+        path: '/api/get-installations',
         method: 'GET',
         config: {
 
+            /*
             validate: {
 
                 query: {
-                    installationId: Joi.number().integer().required()
+                    //userId: Joi.number().integer().required()
                 },
 
                 options: {
                     stripUnknown: true
                 }
-            },
-
-            auth: {
-                strategy: 'cookie-cache',
-                mode: 'try'
             }
+            */
 
         },
+
         handler: function (request, reply) {
 
             console.log('request.auth', request.auth)
@@ -95,14 +92,14 @@ exports.register = function (server, options, next){
             dbOptions.userId = request.auth.credentials.id;
             console.log(dbOptions);
 
-            Db.query(`select * from read_devices(' ${ JSON.stringify(dbOptions) } ')`)
+            Db.query(`select * from read_installations(' ${ JSON.stringify(dbOptions) } ')`)
                 .then(function (result){
 
                     return reply(Hoek.transform(result, internals.DBtoAPI));
                 })
                 .catch(function (err){
                     
-                    Utils.logErr(err, ['devices']);
+                    Utils.logErr(err, ['installations']);
                     return reply(err);
                 });
         }
@@ -114,20 +111,20 @@ exports.register = function (server, options, next){
     H2OPTIMUM_HOST=localhost
     H2OPTIMUM_PORT=8001
 
-    curl -X GET http://$H2OPTIMUM_HOST:$H2OPTIMUM_PORT/api/get-devices?installationId=1
+    curl -X GET http://$H2OPTIMUM_HOST:$H2OPTIMUM_PORT/api/get-installations
 
     */
 
 
-    // 2 - upsert devices
+    // 2 - upsert installations
 
     server.route({
-        path: '/api/upsert-devices',
+        path: '/api/upsert-installations',
         method: 'POST',
         config: {
 
             validate: {
-                payload: internals.devicesSchema,
+                payload: internals.installationsSchema,
                 options: {
                     stripUnknown: true
                 }
@@ -161,9 +158,13 @@ exports.register = function (server, options, next){
             // add userId from the cookie data
             let dbData = Hoek.transform(request.payload, internals.APItoDB);
             dbData.user_id = request.auth.credentials.id;
+
+            // add slug
+            dbData.slug = Slug(dbData.name)
+
             console.log(dbData);
 
-            Db.query(`select * from upsert_devices(' ${ JSON.stringify(dbData) } ')`)
+            Db.query(`select * from upsert_installations(' ${ JSON.stringify(dbData) } ')`)
                 .then(function (result){
 
                     return reply(Hoek.transform(result, internals.DBtoAPI));
@@ -171,25 +172,14 @@ exports.register = function (server, options, next){
                 .catch(function (err){
                     
                     let outputErr = err;
-//console.log("xxx", err.message)
 
                     // check all errors from pg constraints
                     if (false) {}
 
-                    // check for PL/pgSQL error "invalid_text_representation"; 
-                    // this will happen when the we try to insert a mac address that is now well formed
-                    else if (err.code === '22P02' && err.message.indexOf('macaddr') >= 0){
-                        outputErr = Boom.badRequest('mac_invalid_text_representation');
-                    }
-
                     // check for PL/pgSQL error "unique_violation"; 
-                    // use the constraint name (default name given by pg) to identify the constraint in cause (there are 2 cases)
-                    else if (err.code === '23505' && err.message.indexOf('t_devices_installation_id_mac_key') >= 0) {
-                        outputErr = Boom.badRequest('installation_id_mac');
-                    }
-
-                    else if (err.code === '23505' && err.message.indexOf('t_devices_mac_activation_key_key') >= 0) {
-                        outputErr = Boom.badRequest('mac_activation_key');
+                    // use the constraint name (default name given by pg) to identify the constraint in cause (we have 2)
+                    else if (err.code === '23505' && err.message.indexOf('t_installations_user_id_slug_key') >= 0) {
+                        outputErr = Boom.badRequest('user_id_slug');
                     }
 
                     // check for PL/pgSQL error "no_data_found"; 
@@ -197,9 +187,8 @@ exports.register = function (server, options, next){
                     else if (err.code === 'P0002') {
                         outputErr = Boom.badRequest('no_data_found');
                     }      
-                    
                     // log the original error, but reply with the outputErr
-                    Utils.logErr(err, ['devices']);
+                    Utils.logErr(err, ['installations']);
                     return reply(outputErr);
                 });
         }
@@ -211,15 +200,15 @@ exports.register = function (server, options, next){
     H2OPTIMUM_HOST=localhost
     H2OPTIMUM_PORT=8001
 
-    curl -X POST -d "installationId=1&deviceTypeCode=device_sensor&mac=aabbccddeeff&activationKey=&description=desc" http://$H2OPTIMUM_HOST:$H2OPTIMUM_PORT/api/upsert-devices
+    curl -X POST -d "soilTypeCode=soil_loam&cropTypeCode=crop_corn&name=my+installation+xyz&description=desc" http://$H2OPTIMUM_HOST:$H2OPTIMUM_PORT/api/upsert-installations
 
     */
 
 
-    // 3 - delete devices
+    // 3 - delete installations
 
     server.route({
-        path: '/api/delete-devices',
+        path: '/api/delete-installations',
         method: 'POST',
         config: {
 
@@ -263,11 +252,11 @@ exports.register = function (server, options, next){
             dbOptions.userId = request.auth.credentials.id;
             console.log(dbOptions);
 
-            // note that if the device with the given id doesn't below
+            // note that if the installation with the given id doesn't below
             // to this user, an error will be thrown ('query returned no rows'); this error
             // should be handled manually
 
-            Db.query(`select * from delete_devices(' ${ JSON.stringify(dbOptions) } ')`)
+            Db.query(`select * from delete_installations(' ${ JSON.stringify(dbOptions) } ')`)
                 .then(function (result){
 
                     return reply(Hoek.transform(result, internals.DBtoAPI));
@@ -276,17 +265,16 @@ exports.register = function (server, options, next){
 
                     let outputErr = err;
 
-                    // check all errors from pg constraints
+                    // check for PL/pgSQL error "no_data_found"; 
                     if (false) {}
 
-                    // check for PL/pgSQL error "no_data_found"; 
                     // this will happen when the we try to delete a record that doesn't exist anymore
                     else if (err.code === 'P0002'){
                         outputErr = Boom.notFound('no_data_found');
                     }
 
                     // log the original error, but reply with the outputErr
-                    Utils.logErr(err, ['devices']);
+                    Utils.logErr(err, ['installations']);
                     return reply(outputErr);
                 });
         }
@@ -298,7 +286,7 @@ exports.register = function (server, options, next){
     H2OPTIMUM_HOST=localhost
     H2OPTIMUM_PORT=8001
 
-    curl -X POST -d "id=5" http://$H2OPTIMUM_HOST:$H2OPTIMUM_PORT/api/delete-devices
+    curl -X POST -d "id=4" http://$H2OPTIMUM_HOST:$H2OPTIMUM_PORT/api/delete-installations
 
     */
 

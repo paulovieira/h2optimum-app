@@ -44,7 +44,7 @@ let View = Mn.View.extend({
         //    debugger
         //});
 
-        this.refreshList();
+        this.fetchAndRender();
     },
 
     ui: {
@@ -81,7 +81,7 @@ let View = Mn.View.extend({
     },
 
     onClickAddController: function (ev) {
-
+//debugger
         let deviceM = new Backbone.Model({
             id: undefined,
             installationId: this.model.get('installationId')
@@ -91,18 +91,18 @@ let View = Mn.View.extend({
     },
 
     openEditDeviceModal: function(deviceM){
-
+//debugger
         var addOrEditDeviceV = new AddOrEditDeviceV({
             model: deviceM,
             onCloseModal: options => {
 
                 if (options.refreshList) {
-                    this.refreshList();    
+                    this.fetchAndRender();    
                 }
             }
         });
 
-        Utils.showAsModal(addOrEditDeviceV, 'small');        
+        Utils.showAsModal(addOrEditDeviceV, 'small');
     },
 
     openDeleteDeviceModal: function(deviceM){
@@ -112,7 +112,7 @@ let View = Mn.View.extend({
             onCloseModal: options => {
 
                 if (options.refreshList) {
-                    this.refreshList();    
+                    this.fetchAndRender();    
                 }
             }
         });
@@ -139,6 +139,7 @@ let View = Mn.View.extend({
                 obj.lastReadingFormatted = DateFns.format(obj.lastReading, 'D/MMM HH:MM')
             })
             Radio.channel('public').reply('devices', response);
+            Radio.channel('public').trigger('refresh:devices');
             this.model.set('collection', response)
             
         })
@@ -152,7 +153,7 @@ let View = Mn.View.extend({
         return p;
     },
 
-    refreshList: function() {
+    fetchAndRender: function() {
 
         this.fetchData().then(() => { this.render() })
     }

@@ -89,13 +89,19 @@ exports.register = function(server, options, next){
     server.route({ 
         method: 'GET',
         path: '/dashboard-auth',
+        config: {
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            }
+        },
         handler: function (request, reply) {
 
             console.log('/dasboard-auth');
 
             if (!request.auth.isAuthenticated) {
 
-                // check if this request has session data (which means we have an expired session, since isAuthenticated is false)
+                // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
                 if (request.auth.artifacts && request.auth.artifacts.uuid) {
                     const failReason = EXPIRED;
                     return reply.redirect(`/login?auth-fail-reason=${ failReason }`);
@@ -105,6 +111,8 @@ exports.register = function(server, options, next){
                 }
             }
 
+            console.log('request.auth', request.auth)
+
             let templateFile = 'templates/dashboard.html';
             let ctx = {
                 isProduction: !!Config.get('production'),
@@ -113,12 +121,6 @@ exports.register = function(server, options, next){
             reply.view(templateFile, {
                 ctx
             });
-        },
-        config: {
-            auth: {
-                strategy: 'cookie-cache',
-                mode: 'try'
-            }
         }
     });
 

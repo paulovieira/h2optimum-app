@@ -15,25 +15,20 @@ BEGIN
 _user_id := COALESCE((options->>'userId')::int);
 
 if _user_id is null then
-  PERFORM raise_exception_invalid_or_missing_args('read_measurements', 'userId');
+  PERFORM raise_exception_invalid_or_missing_args('read_installations', 'userId');
 end if;
 
 
-query := $$
+RETURN QUERY
 
 select * from t_installations
 where 
-  user_id = %s
-order by id asc
+	user_id = _user_id
+order by id asc;
 
-$$;
-
-query := format(query, _user_id);
---raise notice '%', query;
-
-RETURN QUERY EXECUTE query;
 
 RETURN;
+
 
 
 
@@ -45,8 +40,16 @@ LANGUAGE plpgsql;
 /*
 
 select * from read_installations('{ 
-    "user_id": 1
+    "userId": 1
 
 }');
+
+
+-- if there is some missing argument, error P0000 is thrown
+
+select * from read_installations('{ 
+    "xuserId": 1
+}');
+
 
 */

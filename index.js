@@ -172,6 +172,15 @@ const manifest = {
         // dependencies: []
         {
             plugin: {
+                register: './plugins/installations/installations.js',
+                options: {}
+            },
+            options: {}
+        },
+
+        // dependencies: []
+        {
+            plugin: {
                 register: './plugins/devices/devices.js',
                 options: {}
             },

@@ -44,9 +44,9 @@ insert into t_crop_types(code, description) values
     ('crop_fruits', 'fruits description'),
     ('crop_wheat', 'wheat description'),
     ('crop_grapes', 'grapes description'),
-    ('crop_type_X', 'crop type X description'),
-    ('crop_type_Y', 'crop type Y description'),
-    ('crop_type_Z', 'crop type Z description');
+    ('crop_type_x', 'crop type X description'),
+    ('crop_type_y', 'crop type Y description'),
+    ('crop_type_z', 'crop type Z description');
 
 /*** END CODE FOR CHANGES  ***/
 
