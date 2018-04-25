@@ -150,6 +150,26 @@ exports.register = function(server, options, next){
         }
     });
 
+    server.route({
+        path: "/dashboard/static/{anyPath*}",
+        method: "GET",
+        config: {
+            handler: {
+                directory: { 
+                    path: Path.join(__dirname, 'static'),
+                    index: false,
+                    listing: false,
+                    showHidden: false,
+                    lookupCompressed: true
+                }
+            },
+            cache: {
+                privacy: "public",
+                expiresIn: 3600000
+            },
+            auth: false,
+        }
+    });
 
     return next();
 };
