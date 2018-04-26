@@ -850,7 +850,7 @@ debugger
             xaxis: {
                 type: 'date',
                 //rangemode: 'tozero',
-                tickformatstops:
+                xtickformatstops:
                 [
                 /*
                     {
@@ -955,7 +955,7 @@ debugger
             xaxis: {
                 type: 'date',
                 //rangemode: 'tozero',
-                tickformatstops:
+                xtickformatstops:
                 [
                 /*
                     {
