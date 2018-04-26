@@ -249,7 +249,7 @@ debugger
             data: {
                 //period: period
                 fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
-                toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
+                toDate: DateFns.format(DateFns.addDays(currentDates[1], 1), 'YYYY-MM-DD'),
                 //deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
                 deviceMac: deviceMac
             },
