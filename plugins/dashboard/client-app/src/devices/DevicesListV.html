@@ -25,7 +25,7 @@
         {% for obj in collection %}
         <tr>
           <th scope="row">{{ obj.description }}</th>
-          <td>{{ obj.batteryModeCode }}</td>
+          <td>{{ obj.batteryModeDesc }}</td>
           <td>{{ obj.lastReadingFormatted }}</td>
           <td>
             <a tabindex="0" data-device-id="{{ obj.id }}" style="cursor: pointer;">

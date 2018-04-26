@@ -8,6 +8,26 @@ let NewControllerCardV = require('./NewControllerCardV')
 
 let internals = {};
 
+internals.cropTypes = {
+    'crop_corn': 'corn description',
+    'crop_fruits': 'fruits description',
+    'crop_wheat': 'wheat description',
+    'crop_grapes': 'grapes description',
+    'crop_type_x': 'crop type X description',
+    'crop_type_y': 'crop type Y description',
+    'crop_type_z': 'crop type Z description',
+};
+
+internals.soilTypes = {
+    'soil_loam': 'loam',
+    'soil_sandy_loam': 'sandy loam',
+    'soil_light_texture_silt_loam': 'light texture silt loam',
+    'soil_heavier_texture_silt_loam': 'heavier texture silt loam',
+    'soil_fine_sand': 'fine sand',
+    'soil_type_x': 'soil type X description',
+    'soil_type_y': 'soil type Y description',
+    'soil_type_z': 'soil type Z description',
+};
 
 
 
@@ -160,6 +180,13 @@ let View = Mn.View.extend({
 
         p = p.then(installations => {
             
+            installations.forEach(obj => {
+
+                obj.cropTypeDesc = internals.cropTypes[obj.cropTypeCode];
+                obj.soilTypeDesc = internals.soilTypes[obj.soilTypeCode];
+            })
+
+
             var newController = [{
                 type: 'new',
                 name: 'New installation',

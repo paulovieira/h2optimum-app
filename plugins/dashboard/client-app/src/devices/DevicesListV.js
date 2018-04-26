@@ -16,6 +16,12 @@ let PopoverConfig = require('../_config/popover');
 
 let internals = {};
 
+internals.batteryModes = {
+    'battery_normal': 'normal mode',
+    'battery_eco': 'eco mode',
+    'battery_standby': 'standby mode'
+}
+
 let View = Mn.View.extend({
 
     initialize: function(){
@@ -137,7 +143,9 @@ let View = Mn.View.extend({
             response.forEach(obj => {
 
                 obj.lastReadingFormatted = DateFns.format(obj.lastReading, 'D/MMM HH:MM')
+                obj.batteryModeDesc = internals.batteryModes[obj.batteryModeCode];
             })
+
             Radio.channel('public').reply('devices', response);
             Radio.channel('public').trigger('refresh:devices');
             this.model.set('collection', response)
