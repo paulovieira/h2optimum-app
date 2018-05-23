@@ -21,6 +21,14 @@ let AddNewAutomatismV = require('./AddNewAutomatismV');
 let internals = {};
 internals.measurementPeriodInMinutes = 20;
 
+internals.ONE_HOUR     = 1000 * 60 * 60 * 1;
+internals.TWO_HOURS    = 1000 * 60 * 60 * 2;
+internals.THREE_HOURS  = 1000 * 60 * 60 * 3;
+internals.SIX_HOURS    = 1000 * 60 * 60 * 6;
+internals.TWELVE_HOURS = 1000 * 60 * 60 * 12;
+internals.ONE_DAY      = 1000 * 60 * 60 * 24;
+internals.TWO_DAYs     = 1000 * 60 * 60 * 24 * 2;
+
 
 
 let View = Mn.View.extend({
@@ -333,11 +341,14 @@ debugger
 
     
         //devices.push({ mac: 'f8:f0:05:f5:e0:6c'});
+        console.time('getReadings')
         Q.all(devices.map(obj => this.getReadings(obj.mac))).then(responses => { 
 
+            console.timeEnd('getReadings')
             // responses is an array of arrays (each inner array if relative to 1 device/mac)
             let allMacs = [];
             
+            console.time('missingData')
             responses.forEach((responseMac, i) => {
 
                 // handle the case of not having any reading for some device
@@ -350,32 +361,44 @@ debugger
             });
             
             responses = _.compact(responses);
+            console.timeEnd('missingData')
 
             // main array of arrays for the chart
             let data = {};
 
             // main loop
             allMacs.forEach((mac, i) => {
-//debugger
+
+                let readingsMac = responses[i];
+                for (let i = 0; i < readingsMac.length; i++) {
+                    readingsMac[i].tsFormatted = DateFns.format(readingsMac[i].ts, 'YYYY-MM-DDTHH:mm:ss')
+                }
+
+
                 // array of array relative to the data for this device/mac (will be copied to the main array declared above);
                 // the inner array will have: ts; wp1, wp2, wp3, battery
                 let dataMac = [[], [], [], [], []];
-                let readingsMac = responses[i];
+               
 
                 let readingsTemp = readingsMac.filter(obj => obj.type === 't');
                 // TODO: exclude outliers for temperature
 
+                console.time('processData')
                 readingsTemp.forEach(objTemp => {
 //debugger
                     // get the batch of wp reading relative to this temp. reading;
                     // normally we should 5 elements in a batch: 1 temp + 3 wp + 1 batt (here we filtering only for the 3 wp)
+
                     let readingsBatch = readingsMac.filter(obj => {
 
-                        return Math.abs(DateFns.differenceInMilliseconds(objTemp.ts, obj.ts)) < 100 && (obj.type === 'h' || obj.type === 'b');
+                        return obj.tsFormatted === objTemp.tsFormatted && (obj.type === 'h' || obj.type === 'b');
+                        //return Math.abs(DateFns.differenceInMilliseconds(objTemp.ts, obj.ts)) < 100 && (obj.type === 'h' || obj.type === 'b');
                     })
+
 
                     // store ts and battery
                     dataMac[0].push(objTemp.ts);
+
 
                     let l = readingsBatch.length;
                     for (let j = 0; j < l; j++) {
@@ -385,7 +408,6 @@ debugger
 
                         dataMac[4].push(obj.val);
                     }
-
 
                     for (let j = 0; j < l; j++) {
                         let obj = readingsBatch[j];
@@ -400,14 +422,18 @@ debugger
                         // ntoe that computeWPQuadratic will check the input value to exclude outliers
                         dataMac[obj.sid - 1].push(this.computeWPQuadratic(obj.val, objTemp.val));
                     }
+
                 })
 
                 data[mac] = dataMac;
             })
+            console.timeEnd('processData')
 
+
+            console.time('refreshPlotly')
             this.refreshPlotly(data);
             this.refreshPlotlyBattery(data);
-
+            console.timeEnd('refreshPlotly')
 
 
 
@@ -833,12 +859,16 @@ debugger
             }
         }
 
+        let currentDates = Radio.channel('dates').request('get');
+        let fromDate = currentDates[0];
+        let toDate = DateFns.addDays(currentDates[1], 1);
+
         let layoutOptions = {
 
             //title:'Adding Names to Line and Scatter Plot',
             dragmode: 'pan',
             yaxis: {
-                title: 'water potential',
+                title: 'water potential (cbar)',
                 //tickformat: 's', // "decimal notation with an SI prefix, rounded to significant digits."
                 // more details here: https://github.com/d3/d3-format
                 // see also: 'd3-format specifiers example': http://bl.ocks.org/zanarmstrong/05c1e95bf7aa16c4768e
@@ -850,6 +880,9 @@ debugger
             xaxis: {
                 type: 'date',
                 //rangemode: 'tozero',
+                tickangle: 0,
+                //tickformat: '%H:%M',
+
                 xtickformatstops:
                 [
                 /*
@@ -859,26 +892,98 @@ debugger
                     },
                     */
                     {
-                        dtickrange: [null, 1000 * 60 * 60 * 24],
-                        value: "%b %e %H:%M"
-                    }
+                        dtickrange: [null, internals.ONE_HOUR],
+                        //value: "%b %e %H:%M"
+                        value: '%H:%M f1'
+                    },
+                    {
+                        dtickrange: [internals.ONE_HOUR, internals.TWO_HOURS],
+                        //value: "%b %e %H:%M"
+                        value: '%H:%M f2'
+                    },
+                    {
+                        dtickrange: [internals.TWO_HOURS, internals.THREE_HOURS],
+                        value: "%b %e %H:%M f3"
+                        //value: '%H:%M f3'
+                    },
+                    {
+                        dtickrange: [internals.THREE_HOURS, internals.SIX_HOURS],
+                        //value: "%b %e %H:%M"
+                        value: '%H:%M f4'
+                    },
+                    {
+                        dtickrange: [internals.SIX_HOURS, internals.TWELVE_HOURS],
+                        //value: "%b %e %H:%M"
+                        value: '%H:%M f5'
+                    },
+                    {
+                        dtickrange: [internals.TWELVE_HOURS, internals.ONE_DAY],
+                        //value: "%b %e %H:%M"
+                        value: '%H:%M f6'
+                    },
+                    {
+                        dtickrange: [internals.ONE_DAY, internals.TWO_DAYs],
+                        //value: "%b %e %H:%M"
+                        value: '%H:%M f7'
+                    },
+
                 ],
 
             },
-            height: 350,  // probably should be computed dynamically, according to the width of the screen
+            height: 400,  // probably should be computed dynamically, according to the width of the screen
             margin: {
                 l: 70,
                 r: 50,
-                b: 35,
+                b: 75,
                 t: 0,
-                pad: 18
+                pad: 0
             },
 
-            /*
+            
             legend: {
-                orientation: 'h'
-            }
-            */
+                orientation: 'h',
+            },
+
+            shapes: [
+                {
+                    type: 'rect',
+                    x0: new Date(fromDate).getTime(),
+                    x1: new Date(toDate).getTime(),
+
+                    y0: 0,
+                    y1: 20,
+                    line: {
+                        width: 0
+                    },
+                    fillcolor: 'rgba(0, 102, 204, 0.1)'
+                },
+                {
+                    type: 'rect',
+                    x0: new Date(fromDate).getTime(),
+                    x1: new Date(toDate).getTime(),
+
+                    y0: 20,
+                    y1: 45,
+                    line: {
+                        width: 0
+                    },
+                    fillcolor: 'rgba(0, 128, 0, 0.1)'
+                },
+                {
+                    type: 'rect',
+                    x0: new Date(fromDate).getTime(),
+                    x1: new Date(toDate).getTime(),
+
+                    y0: 45,
+                    y1: 50,
+                    line: {
+                        width: 0
+                    },
+                    fillcolor: 'rgba(153, 0, 0, 0.1)'
+                },
+
+            ]
+            
         };
 
 
@@ -955,7 +1060,7 @@ debugger
             xaxis: {
                 type: 'date',
                 //rangemode: 'tozero',
-                xtickformatstops:
+                tickformatstops:
                 [
                 /*
                     {
@@ -963,9 +1068,14 @@ debugger
                         value: "%H:%M:%S.%L"
                     },
                     */
+
                     {
                         dtickrange: [null, 1000 * 60 * 60 * 24],
                         value: "%b %e %H:%M"
+                    },
+                    {
+                        dtickrange: [1000 * 60 * 60 * 24, null],
+                        value: "%A"
                     }
                 ],
 

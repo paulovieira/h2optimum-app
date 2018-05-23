@@ -142,7 +142,7 @@ let View = Mn.View.extend({
 
             response.forEach(obj => {
 
-                obj.lastReadingFormatted = DateFns.format(obj.lastReading, 'D/MMM HH:MM')
+                obj.lastReadingFormatted = DateFns.format(obj.lastReading, 'D/MMM HH:mm')
                 obj.batteryModeDesc = internals.batteryModes[obj.batteryModeCode];
             })
 
