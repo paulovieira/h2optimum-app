@@ -72,6 +72,9 @@ exports.register = function(server, options, next){
         path: '/dashboard',
         handler: function (request, reply) {
 
+            return reply.redirect('/login-2');
+
+/*
             console.log('/dasboard-auth');
 
             let templateFile = 'templates/dashboard.html';
@@ -82,6 +85,7 @@ exports.register = function(server, options, next){
             reply.view(templateFile, {
                 ctx
             });
+*/
         }
     });
        
@@ -97,6 +101,8 @@ exports.register = function(server, options, next){
         },
         handler: function (request, reply) {
 
+            return reply.redirect('/login-2');
+            /*
             console.log('request.auth', request.auth)
 
             if (Config.get('auth') === 'false') {
@@ -124,6 +130,7 @@ exports.register = function(server, options, next){
             reply.view(templateFile, {
                 ctx
             });
+            */
         }
     });
 

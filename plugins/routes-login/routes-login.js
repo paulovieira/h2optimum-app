@@ -48,6 +48,8 @@ exports.register = function(server, options, next){
         path: '/login',
         handler: function (request, reply) {
 
+            return reply.redirect('/login-2');
+            /*
             console.log('/login');
 
             if (request.auth.isAuthenticated) {
@@ -67,6 +69,7 @@ exports.register = function(server, options, next){
             reply.view(templateFile, {
                 ctx
             });
+            */
             
             /*
 return;
