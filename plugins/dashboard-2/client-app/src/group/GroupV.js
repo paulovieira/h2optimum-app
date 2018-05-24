@@ -370,6 +370,8 @@ debugger
             allMacs.forEach((mac, i) => {
 
                 let readingsMac = responses[i];
+
+                
                 for (let i = 0; i < readingsMac.length; i++) {
                     readingsMac[i].tsFormatted = DateFns.format(readingsMac[i].ts, 'YYYY-MM-DDTHH:mm:ss')
                 }
@@ -377,7 +379,7 @@ debugger
 
                 // array of array relative to the data for this device/mac (will be copied to the main array declared above);
                 // the inner array will have: ts; wp1, wp2, wp3, battery
-                let dataMac = [[], [], [], [], []];
+                let dataMac = [[], [], [], [], [], []];
                
 
                 let readingsTemp = readingsMac.filter(obj => obj.type === 't');
@@ -385,13 +387,13 @@ debugger
 
                 console.time('processData')
                 readingsTemp.forEach(objTemp => {
-//debugger
+
                     // get the batch of wp reading relative to this temp. reading;
                     // normally we should 5 elements in a batch: 1 temp + 3 wp + 1 batt (here we filtering only for the 3 wp)
 
                     let readingsBatch = readingsMac.filter(obj => {
 
-                        return obj.tsFormatted === objTemp.tsFormatted && (obj.type === 'h' || obj.type === 'b');
+                        return obj.tsFormatted === objTemp.tsFormatted && (obj.type === 'h' || obj.type === 'b' || obj.type === 't' );
                         //return Math.abs(DateFns.differenceInMilliseconds(objTemp.ts, obj.ts)) < 100 && (obj.type === 'h' || obj.type === 'b');
                     })
 
@@ -401,13 +403,6 @@ debugger
 
 
                     let l = readingsBatch.length;
-                    for (let j = 0; j < l; j++) {
-                        let obj = readingsBatch[j];
-
-                        if (obj.type !== 'b') { continue }
-
-                        dataMac[4].push(obj.val);
-                    }
 
                     for (let j = 0; j < l; j++) {
                         let obj = readingsBatch[j];
@@ -423,6 +418,21 @@ debugger
                         dataMac[obj.sid - 1].push(this.computeWPQuadratic(obj.val, objTemp.val));
                     }
 
+                    for (let j = 0; j < l; j++) {
+                        let obj = readingsBatch[j];
+
+                        if (obj.type !== 't') { continue }
+
+                        dataMac[4].push(obj.val);
+                    }
+                    
+                    for (let j = 0; j < l; j++) {
+                        let obj = readingsBatch[j];
+
+                        if (obj.type !== 'b') { continue }
+
+                        dataMac[5].push(obj.val);
+                    }
                 })
 
                 data[mac] = dataMac;
@@ -849,9 +859,15 @@ debugger
             //debugger
             let device = devices.filter(obj => obj.mac === key)[0]
 
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= 4; i++) {
                 let trace = $.extend(true, {}, UtilsPlotly.getTraceBase());
                 trace.name = device.description + '_' + i;
+
+                if (i === 4) { 
+                    trace.name = device.description + '_t';
+                    trace.visible = 'legendonly';
+                }
+
                 trace.x = dataRaw[key][0];
                 trace.y = dataRaw[key][i];
 
@@ -1000,6 +1016,9 @@ debugger
 
         Plotly.newPlot(gd, data, layoutOptions, options);
 
+        $(window).on('resize', () => { Plotly.Plots.resize(gd) })
+
+
 
         let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
 
@@ -1037,7 +1056,7 @@ debugger
             trace.marker.size = 2;
             trace.name = device.description;
             trace.x = dataRaw[key][0];
-            trace.y = dataRaw[key][4];
+            trace.y = dataRaw[key][5];
 
 
             data.push(trace);
@@ -1108,6 +1127,8 @@ debugger
         let gd = this.gd = this.getUI('chart-container-battery').get(0);
 
         Plotly.newPlot(gd, data, layoutOptions, options);
+
+        $(window).on('resize', () => { Plotly.Plots.resize(gd) })
 
 
         let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
