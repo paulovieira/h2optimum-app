@@ -1,0 +1,247 @@
+h2 > a {
+  color: #4caf50;
+  /* font-size: 4.6em; */
+}
+h2 > a:hover, h2 > a:focus {
+  /* color: #357a38; */
+  color: #3c8c40;
+  text-decoration: none;
+}
+
+
+h3 > a {
+  color: #4caf50;
+  /* font-size: 4.6em; */
+}
+h3 > a:hover, h3 > a:focus {
+  /* color: #357a38; */
+  color: #3c8c40;
+  text-decoration: none;
+}
+
+
+h1 > a {
+  color: #3C4858;
+  /* font-size: 4.6em; */
+}
+h1 > a:hover, h1 > a:focus {
+  /* color: #357a38; */
+  color: #303946;
+  text-decoration: none;
+}
+
+
+
+.wrapper {
+  height: 100%;
+}
+
+.card [data-background-color="clever-green"] {
+  background: linear-gradient(60deg, #4caf50, #5cb860);
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4);
+}
+
+.sidebar[data-background-color="black"],
+.off-canvas-sidebar[data-background-color="black"] {
+  /*
+  background-color: RGB(161, 216, 132)
+  background-color: RGB(0, 30, 96)
+  
+  background-color: RGB(0, 149, 109)
+  background-color: RGB(0, 110, 98)
+  background-color: RGB(38, 76, 86)
+  background-color: RGB(19, 28, 78)
+  */
+  background-color: RGB(19, 28, 78);
+
+}
+
+
+.sidebar-icons-boxed .menu-submenu .icon,
+.sidebar-icons-boxed .menu-submenu .dot {
+   margin-left: 0px; 
+   margin-right: 0px; 
+}
+
+
+
+/* laflet map */
+
+.info { 
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+} 
+
+.info h4 { 
+  margin: 0 0 5px;
+  color: #777;
+}
+
+.legend { 
+  text-align: left;
+  line-height: 18px;
+  color: #555;
+} 
+
+.legend i { 
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+  opacity: 0.7;
+}
+
+
+
+
+/* custom css for billboard */
+.chart-vertical-ticks {
+  opacity: 0.4;
+  stroke-width: 0.1px;
+}
+
+.bb-grid line {
+  opacity: 0.2;
+}
+
+
+.xbb-line {
+  stroke-width: 10px; 
+}
+
+.bb-target-ly path {
+  stroke-width: 1px; 
+  stroke-dasharray: 4, 2;
+  stroke-dasharray: 3, 4;
+}
+
+.bb-target-ly.bb-focused path.bb-line, .bb-target-ly.bb-focused path.bb-step {
+  stroke-width: 2px; 
+}
+
+.bb-target-cy path {
+  stroke-width: 2px; 
+}
+.bb-target-cy.bb-focused path.bb-line, .bb-target-cy.bb-focused path.bb-step {
+  stroke-width: 3px; 
+}
+
+.bb-target-costs-cy path {
+  stroke-width: 1px; 
+}
+.bb-target-costs-cy.bb-focused path.bb-line, .bb-target-cy.bb-focused path.bb-step {
+  stroke-width: 2px; 
+}
+
+.bb-xgrid, .bb-ygrid {
+  stroke-dasharray: 4, 4;
+  stroke-opacity: 0.5;
+}
+
+.bb-target-ly-occupancy path {
+  stroke-width: 1px; 
+  stroke-dasharray: 4, 2;
+}
+
+
+.occupancy-horizontal-threshold line {
+  stroke: red;
+  stroke-width: 1px;
+}
+
+.tick text {
+  font-size: 0.75rem;
+}
+
+
+
+
+
+/* customizations for thetheme.io */
+
+body {
+  color: #0f1011;
+}
+
+.menu-category::after {
+  border-top: none;
+}
+
+.sidebar {
+  background-color: RGB(19, 28, 78);
+}
+
+.sidebar-header {
+  background-color: RGB(19, 28, 78);
+  height: auto;
+}
+
+.menu-link {
+  height: 45px;
+}
+
+.sidebar-icons-boxed .menu-link .icon {
+  /*background-color: #0f163e; */
+  background-color: #111946;
+}
+
+/* we remove the href attribute from the anchor, but we still want the hand */
+[data-id="datepicker-select"] > a.dropdown-item {
+  cursor: pointer;
+}
+
+.clever-green {
+  color: #4caf50
+}
+
+.bg-lightest {
+  background-color: #fcfdfe !important;
+}
+
+.dropdown-menu,
+.dropdown-grid {
+  z-index: 9999;
+}
+
+.site-footer {
+  padding: 8px 30px;
+}
+
+.table-sm-countries th,
+.table-sm-countries td {
+  padding: 7px;
+}
+
+.py-3 {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}
+
+.ml-6 {
+  margin-left: 6px !important;
+}
+
+.mr-6 {
+  margin-right: 6px !important;
+}
+
+.card-title {
+  color: #4caf50 !important;
+  font-size: 30px !important;
+}
+
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: white;
+}
+
+.table-striped tbody tr:nth-of-type(2n) {
+  background-color: #fcfdfe;
+}
+
+
+

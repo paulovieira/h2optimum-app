@@ -1,0 +1,42 @@
+<div class="card card-inverse card-info" >
+  <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+    <h5 class="card-title card-title-bold" style="font-weight: 300;">Devices</h5>
+
+    <button class="btn btn-sm btn-bold" data-id="add-controller">
+      <i class="fa fa-plus-circle" style="font-size: 1.3em; vertical-align: text-bottom;"></i>
+       new 
+    </button>
+
+  </header>
+
+  <div class="card-body" style="padding-top: 0.5rem; ">
+
+    <table class="table table table-sm table-hover">
+      <thead class="">
+        <tr>
+          <th>Description</th>
+          <th>Battery mode</th>
+          <th>Last reading</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody data-id="devices">
+
+        {% for obj in collection %}
+        <tr>
+          <th scope="row">{{ obj.description }}</th>
+          <td>{{ obj.batteryModeDesc }}</td>
+          <td>{{ obj.lastReadingFormatted }}</td>
+          <td>
+            <a tabindex="0" data-device-id="{{ obj.id }}" style="cursor: pointer;">
+              <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+
+  </div>
+</div>

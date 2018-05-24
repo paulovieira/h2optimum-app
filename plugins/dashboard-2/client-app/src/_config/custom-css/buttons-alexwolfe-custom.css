@@ -1,0 +1,11 @@
+
+/* CHANGED - customize the border color of the 3d buttons - same color of the box shadow */
+
+.button-alexwolfe-3d {
+  border: 1px solid #bbbbbb;
+}
+
+.button-alexwolfe-3d:active, .button-alexwolfe-3d.is-active, .button-alexwolfe-3d.active {
+  border: 1px solid #bbbbbb;
+}
+

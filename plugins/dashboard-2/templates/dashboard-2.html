@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>H2Optimum - app</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,300i" rel="stylesheet">
+
+    <!-- Styles -->
+  <!-- <link href="../assets/css/core.min.css" rel="stylesheet"> -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> 
+  <link href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css" rel="stylesheet">  
+
+    <!-- temporary hack - later we should include leaflet css in the bundle -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+          <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.css" rel="stylesheet">  -->
+          <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.1/css/perfect-scrollbar.min.css" rel="stylesheet">  -->
+
+    <link rel="stylesheet" type="text/css" href="/dashboard-2/dist/{{ libBuildCss }}">
+    <link rel="stylesheet" type="text/css" href="/dashboard-2/dist/{{ appBuildCss }}">
+
+    <!-- Favicons 
+    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+    <link rel="icon" href="../assets/img/favicon.png">
+    -->
+  </head>
+
+  <body>
+
+
+                <!-- Scripts -->
+                  <!--
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script> 
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/js/bootstrap.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.8.1/js/perfect-scrollbar.jquery.min.js"></script>
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/labjs/2.0.3/LAB.min.js"></script> 
+                  -->
+
+
+    <!-- <script src="../assets/js/script.js"></script> -->
+      
+    <script>
+
+        window.h2optimum = window.h2optimum || {};
+        h2optimum = {{ ctx | stringify }}
+
+    </script>
+
+    <script src="/dashboard-2/dist/{{ runtimeBuildJs }}"></script>
+    <script src="/dashboard-2/dist/{{ libBuildJs }}"></script>
+    <script src="/dashboard-2/dist/{{ appBuildJs }}"></script>
+
+  </body>
+</html>
+
+</body>
+
+</html>

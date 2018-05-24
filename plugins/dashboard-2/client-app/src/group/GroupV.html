@@ -1,0 +1,236 @@
+<!-- Main container -->
+<main class="main-container" >
+
+  {#
+  <header class="header group-header" data-group-id="{{ groupId }}" style="margin-bottom: 0; xdisplay: flex;">
+
+    <div style="margin: 30px 0; xborder: solid 1px; xwidth: 50%; left: 0;" class="header-info">
+      <h1 style="margin: 0; xline-height: 1; " class="header-title">
+        <strong>{{ name }}</strong> &nbsp;{{ description }}
+      </h1>
+    </div>
+
+  </header>
+  #}
+
+
+  <div class="main-content" >
+
+  <div class="row">
+  <div class="offset-lg-1 col-lg-10">
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a class="text-primary" href="#/dashboard">Home</a></li>
+      <li class="breadcrumb-item active">{{ name }}</li>
+    </ol>
+
+
+    <div class="row">
+      
+      <div class="col-sm-6">
+
+
+        <div class="card" >
+          <header class="card-header " style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Summary</h5>
+
+          </header>
+
+          <div class="card-body" style="padding-top: 0.5rem; ">
+
+            <table class="table table table-sm table-hover">
+
+              <tbody>
+
+                <tr>
+                  <td style="border-top: none;">
+                    Status: off
+                    <label class="switch switch-lg" style="float: right;">
+                      <input type="checkbox" data-id="checkbox-switch-status">
+                      <span class="switch-indicator xbg-info" style=""></span>
+                      <span class="switch-description"></span>
+                    </label>
+
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: none;">Diagnostics: 
+                  <button class="btn btn-sm btn-bold btn-info " style="float: right">Details</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="border-top: none;">Soil type: {{ soilTypeDesc }}</td>
+                </tr>
+                <tr>
+                  <td style="border-top: none;">Crop type: {{ cropTypeDesc }}</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-sm-6" data-region-id="devices">
+
+      </div>
+
+    </div>
+
+
+    <div class="row">
+      
+      <div class="col-sm-12">
+
+
+
+      </div>
+    </div>
+
+
+
+    <div class="row">
+      
+      <div class="col-sm-12">
+
+        <div class="card" >
+          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Measurements</h5>
+
+            <div class="input-group" style="width: inherit;">
+              <input type="text" class="form-control" data-id="flatpickr-datepicker" >
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" data-id="datepicker-select">
+                  <a class="dropdown-item" data-period="previous-day">Last 24 hours</a>
+                  <a class="dropdown-item" data-period="previous-3-days">Last 72 hours</a>
+                  <a class="dropdown-item" data-period="previous-week">Last week</a>
+                  <a class="dropdown-item" data-period="previous-month">Last month</a>
+                  <a class="dropdown-item" data-period="previous-year">Last year</a>
+                </div>
+              </div>
+            </div>
+
+
+          </header>
+
+          <div class="card-body" style="padding-top: 0.5rem; ">
+
+            <div data-id="chart-container"></div>
+
+          </div>
+        </div>
+      
+      </div>
+
+      <div class="col-sm-6">
+
+        <div class="card" >
+          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Battery</h5>
+            
+            <div class="input-group" style="width: inherit;">
+              <input type="text" class="form-control" data-id="flatpickr-datepicker" >
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                  <i class="fa fa-calendar" aria-hidden="true"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" data-id="datepicker-select">
+                  <a class="dropdown-item" data-period="previous-day">Last 24 hours</a>
+                  <a class="dropdown-item" data-period="previous-3-days">Last 72 hours</a>
+                  <a class="dropdown-item" data-period="previous-week">Last week</a>
+                  <a class="dropdown-item" data-period="previous-month">Last month</a>
+                  <a class="dropdown-item" data-period="previous-year">Last year</a>
+                </div>
+              </div>
+            </div>
+
+
+          </header>
+
+          <div class="card-body" style="padding-top: 0.5rem; ">
+
+            <div data-id="chart-container-battery"></div>
+
+          </div>
+        </div>
+      
+      </div>
+
+      <div class="col-sm-6">
+
+        <div class="card" >
+          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+            <h5 class="card-title card-title-bold" style="font-weight: 300;">Automations</h5>
+
+            <button class="btn btn-sm btn-bold" data-id="add-automatism">
+              <i class="fa fa-plus-circle" style="font-size: 1.3em; vertical-align: text-bottom;"></i>
+               New
+            </button>
+
+          </header>
+
+          <div class="card-body" style="padding-top: 0.5rem; ">
+
+            <table class="table table table-sm table-hover" data-id="controllers-table">
+              <thead class="">
+                <tr>
+                  <th>Trigger</th>
+                  <th>Action</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>water potential levels are &lt; 10</td>
+                  <td>send sms to John Doe</td>
+                  <td>
+                    <a tabindex="0" data-id="automatism-options" style="cursor: pointer;">
+                      <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>water potential levels are &lt; 10</td>
+                  <td>start irrigation</td>
+                  <td>
+                    <a tabindex="0" data-id="automatism-options"  style="cursor: pointer;"> 
+                      <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
+                    </a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>water potential levels are &gt; 15</td>
+                  <td>stop irrigation</td>
+                  <td>
+                    <a tabindex="0" data-id="automatism-options"  style="cursor: pointer;"> 
+                      <i class="ti-more-alt rotate-90" style="padding: 5px 0;" title="Click for more options"></i>
+                    </a>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+
+  </div>
+
+  </div>
+  </div>
+
+
+  <footer class="site-footer" data-region-id="footer"></footer>
+
+</main>
+<!-- END Main container -->

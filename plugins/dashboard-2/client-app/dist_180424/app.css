@@ -1,0 +1,128 @@
+/* font-aweome */
+.fa-spin-4s {
+	-webkit-animation: fa-spin 4s infinite linear;
+	animation: fa-spin 4s infinite linear;
+}
+
+
+.bg-secondary-2 {
+  background-color: #4d5259 !important;
+}
+
+.alert-summary {
+	border-bottom: 1px solid rgba(77, 82, 89, 0.07);
+	border-top: 1px solid rgba(77, 82, 89, 0.07);
+	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+
+[data-group-id="1"]:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* background: url('../../../static/img/ales-krivec-33160_.jpg') center center; */
+    opacity: .3;
+    background-size:cover
+}
+
+[data-group-id="2"]:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* background: url('../../../static/img/johannes-plenio-261931_.jpg') center center; */
+    opacity: .3;
+    background-size:cover
+}
+
+[data-group-id="3"]:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* background: url('../../../static/img/rasmus-landgreen-697_.jpg') center center; */
+    opacity: .3;
+    background-size:cover
+}
+
+
+
+/* bootstrap wizard */
+
+[data-id="wizard-container"] span.nav-title {
+    font-size: 110%;
+}
+
+
+/* override bootstrap theme */
+
+.main-content {
+    background-color: #eee;
+}
+
+
+.bg-info {
+    background-color: #fafafa !important;
+    /* color: black; */
+}
+
+nav.sidebar-navigation {
+    background-color: #fafafa;
+}
+
+a.menu-link {
+    
+    color: #7a7a7a !important;
+    color: #666 !important;
+}
+
+span.title:hover {
+    color: #48b0f7;
+    transition: color 0.2s;
+}
+
+/* override the switch color (when on) */
+.switch input:checked ~ .switch-indicator::after {
+  background: #48b0f7;
+}
+
+.table-hover tbody[data-id="devices"] tr:hover {
+  background-color: #409ede;
+}
+
+a:hover, a:focus {
+  color: #fff;
+
+}
+
+/* for 50-50 split screen, use only for very large screen (larger then 1200)*/
+@media (min-width: 1500px) {
+/*
+  .col-xl {
+    -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+    -ms-flex-positive: 1;
+        flex-grow: 1;
+    max-width: 100%;
+  }
+*/
+  .col-xl-6 {
+    -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+}

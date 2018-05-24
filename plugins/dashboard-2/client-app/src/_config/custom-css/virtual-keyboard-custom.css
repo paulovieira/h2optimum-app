@@ -1,0 +1,84 @@
+/* adjustments to the virtual keyboard plugin - https://mottie.github.io/Keyboard/ */
+
+/*
+position virtual keyboard at bottom of the screen;
+more details: https://github.com/Mottie/Keyboard/wiki/Layout
+*/
+
+.ui-keyboard {
+  border-radius: 0;
+  left: 0;
+  top: auto;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  padding: 30px 0 60px 0;
+  border-top: 1px solid #999;
+  margin-top: 10px;
+  z-index: 9999;  /* necessary to work well inside of a bs modal */
+
+
+  /* extract into a separate class: .ui-keyboard-vertical, which should be added dynamically (via query string for instance) */
+  padding-bottom: 50px;
+  width: 96%;
+  margin-left: 2%;
+  border-radius: 5px;
+  margin-bottom: 170px;
+  
+}
+
+.ui-keyboard-button {
+    margin-left: 6px;
+    margin-top: 15px;
+    font-weight: 700;
+    font-size: 125%;
+    border-radius: 5px;
+}
+
+.ui-keyboard-popup {
+    padding-left: 10px;
+    padding-bottom: 20px;
+}
+
+.ui-keyboard-text > .material-icons {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -3px;
+}
+
+.ui-keyboard-text > .material-icons-keyboard-cancel {
+    font-size: 120% !important;
+    color: #e54028;
+    margin-left: 5px;
+}
+
+.ui-keyboard-text > .material-icons-keyboard-arrow_upward {
+    margin-right: 5px;
+}
+
+.ui-keyboard-text > .material-icons-keyboard-arrow_backward {
+    width: 24px;  /* should be equal to the font size of the icons */
+    margin-right: 10px;
+}
+
+.ui-keyboard-text > .material-icons-keyboard-check_circle {
+    font-size: 120% !important;
+    color: #84bf00;
+    margin-left: 5px;
+}
+
+
+/* preview keyset plugin - https://mottie.github.io/Keyboard/docs/preview-keyset.html */
+
+.ui-keyboard-keyset-alt .ui-keyboard-button::after,
+.ui-keyboard-keyset-alt-shift .ui-keyboard-button::after,
+.ui-keyboard-keyset-normal .ui-keyboard-button::after,
+.ui-keyboard-keyset-shift .ui-keyboard-button::after {
+    top: -0.6em;
+    left: 3px;
+}
+
+/* color of the text in the input when the keyboard is not active*/
+.ui-keyboard-nokeyboard {
+  color: black;
+}

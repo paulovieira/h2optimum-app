@@ -168,6 +168,13 @@ const manifest = {
             },
             options: {}
         },
+        {
+            plugin: {
+                register: './plugins/dashboard-2/dashboard-2.js',
+                options: {}
+            },
+            options: {}
+        },
 
         // dependencies: []
         {

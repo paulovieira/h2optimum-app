@@ -1,0 +1,60 @@
+<!-- htmlhint spec-char-escape: false, tag-pair: false  -->
+
+
+<div class="modal-header">
+    <h4 class="modal-title" style="font-weight: 300;">
+
+    {% if id > 0 %}
+        Edit device
+    {% else %}
+        New device
+    {% endif %}
+    
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="form-group">
+                <label for="_input-1">Description (optional)</label>
+                <input type="text" class="form-control" name="description" value="{{ description }}"  />
+            </div>
+            <div class="form-group">
+                <label for="_input-2">MAC address</label>
+                <input type="text" class="form-control" name="mac" value="{{ mac }}"  />
+            </div>
+
+            <div class="form-group">
+                <label for="_input-4">Battery mode</label>
+                <select class="selectpicker form-control form-control-sm show-tick mr-sm-2" name="batteryModeCode" data-width="fit" >
+                    <option value="battery_normal" {{ "selected" if batteryModeCode == "battery_normal" }}>Normal</option>
+                    <option value="battery_eco" {{ "selected" if batteryModeCode == "battery_eco" }}>Eco</option>
+                    <option value="battery_standby" {{ "selected" if batteryModeCode == "battery_standby" }}>Stand-by</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="_input-4">Device type</label>
+                <select class="selectpicker form-control xform-control-sm show-tick mr-sm-2" name="deviceTypeCode" data-width="fit" >
+                  <option value="device_sensor" {{ "selected" if deviceTypeCode == "device_sensor" }}>Sensors only</option>
+                  <option value="device_switch" {{ "selected" if deviceTypeCode == "device_switch" }}>Switch only</option>
+                  <option value="device_mixed" {{ "selected" if deviceTypeCode == "device_mixed" }}>Mixed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="_input-3">Activation key</label>
+                <input type="text" class="form-control" name="activationKey" value="{{ activationKey }}"  />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-bold btn-secondary" data-id="close">Close</button>
+    <button type="button" class="btn btn-bold btn-info" data-id="save">Save</button>
+</div>
+

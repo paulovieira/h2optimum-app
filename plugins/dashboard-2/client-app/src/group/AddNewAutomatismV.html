@@ -1,0 +1,97 @@
+
+<div class="modal-header">
+    <h4 class="modal-title">
+
+    {% if Id == 0 %}
+        New automatism
+    {% else %}
+        New automatism
+    {% endif %}
+    
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div data-id="wizard-container">
+              <ul class="nav nav-process nav-process-circle" data-id="wizard-nav">
+
+                <li class="nav-item complete processing">
+                  <span class="nav-title">1. Trigger  <span style="margin-left: 5px;" class="icon fa fa-thermometer-half"></span> </span>
+
+                  <a class="nav-link active show" data-toggle="tab" href="#wizard-basic-1"></a>
+                </li>
+
+                <li class="nav-item">
+                  <span class="nav-title">2. Action <span style="margin-left: 5px;" class="icon fa fa-tint"></span> </span>
+                  <a class="nav-link" data-toggle="tab" href="#wizard-basic-2"></a>
+                </li>
+
+                <li class="nav-item">
+                  <span class="nav-title">3. Other configuarions <span style="margin-left: 5px;" class="icon fa fa-calendar-check-o"></span> </span>
+                  <a class="nav-link" data-toggle="tab" href="#wizard-basic-3"></a>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-title">4.Confirmation <span style="margin-left: 5px;" class="icon fa fa-check-circle-o"></span> </span>
+                  <a class="nav-link" data-toggle="tab" href="#wizard-basic-4"></a>
+                </li>
+
+              </ul>
+
+
+              <div class="tab-content">
+
+                <div class="tab-pane fade active show" id="wizard-basic-1">
+                  <p class="my-2">
+                    <div data-region-id="step-0"></div>
+                  </p>
+                </div>
+
+                <div class="tab-pane fade" id="wizard-basic-2">
+                  <p class="my-2">
+                    <div data-region-id="step-1"></div>
+                    action form
+                  </p>
+                </div>
+
+                <div class="tab-pane fade" id="wizard-basic-3">
+                  <p class="my-2">
+                    <div data-region-id="step-2"></div>
+                    period
+                  </p>
+                </div>
+
+                <div class="tab-pane fade" id="wizard-basic-4">
+                  <p class="my-2">
+                    <div data-region-id="step-3"></div>
+                    confirmation
+                  </p>
+                </div>
+
+              </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer" style="display: block;">
+
+    <div class="flexbox">
+      <div>
+          <button type="button" class="btn btn-bold btn-secondary" data-id="close">Close</button>
+      </div>
+      <div>
+          <button class="btn btn-bold btn-secondary disabled" data-id="wizard-previous">Back</button>    
+          <button class="btn btn-bold btn-primary" data-id="wizard-next">Next</button>
+          <button class="btn btn-bold btn-primary d-none hidden" data-id="wizard-finish">Finish and save</button>                        
+      </div>
+
+    </div>
+
+</div>
+
