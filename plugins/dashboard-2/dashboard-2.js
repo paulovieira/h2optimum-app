@@ -88,7 +88,7 @@ exports.register = function(server, options, next){
     // authenticated version
     server.route({ 
         method: 'GET',
-        path: '/dashboard-2-auth',
+        path: '/dashboard-auth-2',
         config: {
             auth: {
                 strategy: 'cookie-cache',
@@ -108,10 +108,10 @@ exports.register = function(server, options, next){
                     // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
                     if (request.auth.artifacts && request.auth.artifacts.uuid) {
                         const failReason = EXPIRED;
-                        return reply.redirect(`/login?auth-fail-reason=${ failReason }`);
+                        return reply.redirect(`/login-2?auth-fail-reason=${ failReason }`);
                     }
                     else {
-                        return reply.redirect('/login');
+                        return reply.redirect('/login-2');
                     }
                 }                
             }

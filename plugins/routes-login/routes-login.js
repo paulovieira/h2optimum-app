@@ -98,6 +98,60 @@ return;
     });
 
 
+    server.route({
+        method: 'GET',
+        path: '/login-2',
+        handler: function (request, reply) {
+
+            console.log('/login-2');
+
+            if (request.auth.isAuthenticated) {
+                return reply.redirect('/dashboard-auth-2/#');
+            }
+
+            const failReasonCode = request.query['auth-fail-reason'];
+            const dynamicHtml = `<span style="background: red"> ${ internals.authFailReasons[failReasonCode] || '' } </span> <br><br>`;
+
+
+            let templateFile = 'templates/login-2.html';
+            let ctx = {
+                //isProduction: !!Config.get('production'),
+                abc: 123
+            };
+
+            reply.view(templateFile, {
+                ctx
+            });
+            
+            /*
+return;
+            
+            const html = `
+                <html><body>
+                    <h1>H2Optimum</h1>
+                    Access to your account<br><br>
+                    <form method="post" action="/login-data">
+                        Username: <input type="text" name="username"> <br>
+                        Password: <input type="password" name="password"> <br>
+                        <input type="submit">
+                    </form>
+                    ${ dynamicHtml }
+                    <a href="/">Home</a>
+                </body></html>
+            `;
+
+            return reply(html);
+            
+            */
+        },
+        config: {
+            auth: {
+                strategy: 'cookie-cache',
+                mode: 'try'
+            }
+        }
+    });
+
     // static files 
     
     server.route({
