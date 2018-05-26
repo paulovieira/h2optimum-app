@@ -22,11 +22,12 @@
     <ul class="menu menu-sm menu-bordery">
 
       <li class="menu-item active">
-        <a class="menu-link" href="index.html">
+        <a class="menu-link" href="#/dashboard">
           <span class="icon ti-home"></span>
           <span class="title">Dashboard</span>
         </a>
       </li>
+
 
       <li class="menu-item">
         <a class="menu-link" href="#">
@@ -174,6 +175,24 @@
         </div>
       </li>
     </ul>
+
+    <div class="topbar-divider"></div>
+
+    <div class="input-group">
+      <input type="text" class="form-control" data-id="flatpickr-datepicker">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right" data-id="datepicker-select">
+          <a class="dropdown-item" data-period="previous-day">Last 24 hours</a>
+          <a class="dropdown-item" data-period="previous-3-days">Last 72 hours</a>
+          <a class="dropdown-item" data-period="previous-week">Last week</a>
+          <a class="dropdown-item" data-period="previous-month">Last month</a>
+          <a class="dropdown-item" data-period="previous-year">Last year</a>
+        </div>
+      </div>
+    </div>
 
             {#
             <form class="lookup lookup-circle lookup-right" target="index.html">

@@ -7,6 +7,7 @@ const Radio = require('backbone.radio');
 const Fecha = require('fecha');
 const Nunjucks = require('nunjucks');
 const Q = require('q');
+let DateFns = require('date-fns');
 
 const internals = {};
 
@@ -721,4 +722,37 @@ exports.getConfig = function(key) {
 
     // all keys in global.Host.config have been previously lower-cased
     return global.Host.config[key.toLowerCase()];
+};
+
+// wrapper around DateFns.format for a generalized use (can be used with a date object
+// or with an object containing dates); 
+exports.dateFnsFormat = function (date, format = 'YYYY-MM-DD'){
+
+    let out;
+
+    if (typeof format !== 'string') { format = 'YYYY-MM-DD' }
+
+    if (_.isString(date)) {
+        // we assume it is already a date in the desired format, so nothing to do
+        out = date;
+    }
+    else if (_.isDate(date)){
+        out = DateFns.format(date, format);
+    }
+    else if (Array.isArray(date)) {
+        // we assume all values in the array are dates
+        out = [];
+        for (let i = 0; i < date.length; i++) {
+            out.push(DateFns.format(date[i], format))
+        }
+    }
+    else if (_.isObject(date)) {
+        // we assume all values in the object are dates
+        out = {};
+        for (let key in date) {
+            out[key] = DateFns.format(date[key], format);
+        }
+    }
+
+    return out;
 };

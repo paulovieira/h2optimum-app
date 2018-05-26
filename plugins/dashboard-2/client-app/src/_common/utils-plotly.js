@@ -27,7 +27,8 @@ internals.traceBase = {
 
 internals.computeLineWidth = function () {
 
-    let currentDates = Radio.channel('dates').request('get');
+    this.datepickerM = Radio.channel('collections').request('datepickerM');
+    let currentDates = this.datepickerM.getPeriod()
     let numDays = DateFns.differenceInDays(currentDates[1], currentDates[0]);
 
     let lineWidth = 1.5;

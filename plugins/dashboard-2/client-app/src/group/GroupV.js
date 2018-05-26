@@ -57,6 +57,9 @@ let View = Mn.View.extend({
             this.fetchData();
         })
 
+        this.datepickerM = Radio.channel('collections').request('datepickerM');
+        this.listenTo(this.datepickerM, 'change:period', () => { this.fetchData() })
+
     },
 
     ui: {
@@ -66,8 +69,6 @@ let View = Mn.View.extend({
         'checkbox-switch-status': '[data-id="checkbox-switch-status"]',
         'status-text': '[data-id="status-text"]',
         ///'add-controller': '[data-id="add-controller"]',
-        'datepicker': 'input[data-id="flatpickr-datepicker"]',
-        'datepicker-option': '[data-id="datepicker-select"] > a.dropdown-item',
         'chart-container': '[data-id="chart-container"]',
         'chart-container-battery': '[data-id="chart-container-battery"]',  // to be removed
         'controller-options': '[data-id="controllers-table"] tr a',
@@ -76,8 +77,6 @@ let View = Mn.View.extend({
 
     events: {
         'change @ui.checkbox-switch-status': 'onChangeStatus',
-        ///'click @ui.add-controller': 'onClickAddController',
-        'click @ui.datepicker-option': 'setDatepickerSelection',
         'click @ui.add-automatism': 'onClickAddAutomatism',
     },
 
@@ -87,12 +86,6 @@ let View = Mn.View.extend({
     },
 
     onAttach: function() {
-
-        this.createDatepicker();
-        let initialToDate = internals.initialToDate = DateFns.startOfToday();
-        let initialFromDate = internals.initialFromDate = DateFns.subDays(initialToDate, 4);
-
-        Radio.channel('dates').request('set', [initialFromDate, initialToDate]);
 
         let devicesM = new Backbone.Model({
             slug: this.model.get('slug'),
@@ -153,95 +146,11 @@ debugger
         Utils.showAsModal(addNewAutomatismV, 'large');
     },
 
-    createDatepicker: function() {
-
-        // see: https://chmln.github.io/flatpickr/instance-methods-properties-elements/
-        this.flatpickr = Flatpickr(this.getUI('datepicker').get(0), {
-
-            mode: "range",
-            //altInput: true,
-
-            maxDate: DateFns.startOfToday(),
-            minDate: DateFns.subMonths(DateFns.startOfToday(), 13),
-            
-            onChange: (newDates, dateStr, datepicker) => {
-
-                if (newDates.length !== 2) {
-                    return
-                }
-
-                let currentDates = Radio.channel('dates').request('get');
-                if (DateFns.isSameDay(currentDates[0], newDates[0]) && DateFns.isSameDay(currentDates[1], newDates[1])) {
-                    return;
-                }
-
-                const triggerChangeOnDatepicker = false;
-                Radio.channel('dates').request('set', newDates, triggerChangeOnDatepicker);
-             },
-             
-             plugins: [
-                //new MonthSelectPlugin({ abc: 456 }),
-                //new RangePlugin()
-
-            ],
-
-        });
-
-
-        let view = this;
-        Radio.channel('dates').reply('set', function (dates, triggerChangeOnDatepicker = true) {
-
-            if (!Array.isArray(dates)) { return }
-
-            this._dates = dates;
-            view.fetchData();
-
-            if (triggerChangeOnDatepicker) {
-                view.flatpickr.setDate(dates, triggerChangeOnDatepicker);
-            }
-        });
-
-        Radio.channel('dates').reply('get', function () {
-
-            return this._dates;
-        });
-    },
-
-    setDatepickerSelection: function (ev) {
-
-        let $el = $(ev.currentTarget);
-        let period = $el.data('period');
-
-        let amountToSubtract;
-
-        if (period === 'previous-day') {
-            amountToSubtract = 1;
-        }
-        else if (period === 'previous-3-days') {
-            amountToSubtract = 3;
-        }
-        else if (period === 'previous-week') {
-            amountToSubtract = 7;
-        }
-        else if (period === 'previous-month') {
-            amountToSubtract = 30;
-        }
-        else if (period === 'previous-year') {
-            amountToSubtract = 365;
-        }
-
-        let toDate = DateFns.startOfToday();
-        let fromDate = DateFns.subDays(toDate, amountToSubtract);
-
-        Radio.channel('dates').request('set', [fromDate, toDate]);
-
-    },
-
     
     getReadings: function (deviceMac) {
 
-        let currentDates = Radio.channel('dates').request('get');
-        let period = DateFns.differenceInHours(internals.initialToDate, internals.initialFromDate)
+        let currentDates = this.datepickerM.getPeriod();
+        ///let period = DateFns.differenceInHours(internals.initialToDate, internals.initialFromDate)
 
         // the measurements are available only from the API domain (different than the one from this app)
         let protocol = window.location.href.split(':')[0];
@@ -255,9 +164,10 @@ debugger
             url: domain + '/v1/get-measurements',
             //url: '/v1/get-measurements',
             data: {
-                //period: period
+                ///period: period
                 fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
-                toDate: DateFns.format(DateFns.addDays(currentDates[1], 1), 'YYYY-MM-DD'),
+                //toDate: DateFns.format(DateFns.addDays(currentDates[1], 1), 'YYYY-MM-DD'),
+                toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
                 //deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
                 deviceMac: deviceMac
             },
@@ -274,11 +184,11 @@ debugger
 
     computeWPQuadratic: function (resistance, temp){
 
-        if (resistance > 12000 || resistance < 0) {
+        if (resistance > 40000 || resistance < 0) {
             return null;
         }
 
-        if (temp > 60 || resistance < -20) {
+        if (temp > 60 || temp < -20) {
             return null;
         }
 
@@ -371,7 +281,7 @@ debugger
 
                 let readingsMac = responses[i];
 
-                
+
                 for (let i = 0; i < readingsMac.length; i++) {
                     readingsMac[i].tsFormatted = DateFns.format(readingsMac[i].ts, 'YYYY-MM-DDTHH:mm:ss')
                 }
@@ -439,8 +349,8 @@ debugger
             })
             console.timeEnd('processData')
 
-
             console.time('refreshPlotly')
+
             this.refreshPlotly(data);
             this.refreshPlotlyBattery(data);
             console.timeEnd('refreshPlotly')
@@ -875,10 +785,19 @@ debugger
             }
         }
 
-        let currentDates = Radio.channel('dates').request('get');
+        
+        let maxY = 50;
+        if (data.length > 0) {
+            maxY = _.max([_.max(data[0].y), _.max(data[1].y), _.max(data[2].y), _.max(data[3].y)]);
+            maxY = Math.round(maxY) + 5;
+        }
+        
+        let currentDates = this.datepickerM.getPeriod();
         let fromDate = currentDates[0];
-        let toDate = DateFns.addDays(currentDates[1], 1);
+        //let toDate = DateFns.addDays(currentDates[1], 1);
+        let toDate = currentDates[1];
 
+        //let maxY = 99;
         let layoutOptions = {
 
             //title:'Adding Names to Line and Scatter Plot',
@@ -889,7 +808,7 @@ debugger
                 // more details here: https://github.com/d3/d3-format
                 // see also: 'd3-format specifiers example': http://bl.ocks.org/zanarmstrong/05c1e95bf7aa16c4768e
                 
-                fixedrange: true, // disable zoom for y-axis
+                //fixedrange: true, // disable zoom for y-axis
                 hoverformat: '.3s'
 
             },
@@ -991,7 +910,7 @@ debugger
                     x1: new Date(toDate).getTime(),
 
                     y0: 45,
-                    y1: 50,
+                    y1: maxY,
                     line: {
                         width: 0
                     },
@@ -1001,6 +920,10 @@ debugger
             ]
             
         };
+
+        if (data.length === 0) {
+            layoutOptions.xaxis.range = [fromDate, toDate];
+        }
 
 
         let options = {
@@ -1015,12 +938,16 @@ debugger
         let gd = this.gd = this.getUI('chart-container').get(0);
 
         Plotly.newPlot(gd, data, layoutOptions, options);
+        // setTimeout(() => {
+
+        //     Plotly.relayout(gd, layoutOptions);
+        // }, 1000)
 
         $(window).on('resize', () => { Plotly.Plots.resize(gd) })
 
 
 
-        let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
+        //let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
 
         // based on this example: https://codepen.io/etpinard/pen/vXrRLR
         // internals.isUnderRelayout = false;
@@ -1039,10 +966,66 @@ debugger
         gd.on('plotly_relayout', UtilsPlotly.updateRangeOnZoomOut.bind(this))
         */
 
+        gd.on('plotly_relayout', (ev) => {
+
+            let max;
+            if (_.isNumber(ev['yaxis.range[1]'])) {
+                max = Math.round(ev['yaxis.range[1]']) + 1;
+            }
+
+            if (max === undefined) { return }
+
+            let layoutOptions = {
+                shapes: [
+                
+                    {
+                        type: 'rect',
+                        x0: new Date(fromDate).getTime(),
+                        x1: new Date(toDate).getTime(),
+
+                        y0: 0,
+                        y1: 20,
+                        line: {
+                            width: 0
+                        },
+                        fillcolor: 'rgba(0, 102, 204, 0.1)'
+                    },
+                    {
+                        type: 'rect',
+                        x0: new Date(fromDate).getTime(),
+                        x1: new Date(toDate).getTime(),
+
+                        y0: 20,
+                        y1: 45,
+                        line: {
+                            width: 0
+                        },
+                        fillcolor: 'rgba(0, 128, 0, 0.1)'
+                    },
+                    
+                    {
+                        type: 'rect',
+                        x0: new Date(fromDate).getTime(),
+                        x1: new Date(toDate).getTime(),
+
+                        y0: 45,
+                        y1: max,
+                        line: {
+                            width: 0
+                        },
+                        fillcolor: 'rgba(153, 0, 0, 0.1)'
+                    },
+
+                ]
+            }
+            console.log('current max: ', max)
+            Plotly.relayout(gd, layoutOptions);
+        });
+
 
     },
 
-    refreshPlotlyBattery: function(dataRaw) {
+    refreshPlotlyBattery: function (dataRaw) {
 
         // array of traces (plotly objects)
         let data = [];
@@ -1078,25 +1061,26 @@ debugger
             },
             xaxis: {
                 type: 'date',
+                tickangle: 0,
                 //rangemode: 'tozero',
-                tickformatstops:
-                [
-                /*
-                    {
-                        dtickrange: [null, 1000],
-                        value: "%H:%M:%S.%L"
-                    },
-                    */
+                // tickformatstops:
+                // [
+                // /*
+                //     {
+                //         dtickrange: [null, 1000],
+                //         value: "%H:%M:%S.%L"
+                //     },
+                //     */
 
-                    {
-                        dtickrange: [null, 1000 * 60 * 60 * 24],
-                        value: "%b %e %H:%M"
-                    },
-                    {
-                        dtickrange: [1000 * 60 * 60 * 24, null],
-                        value: "%A"
-                    }
-                ],
+                //     {
+                //         dtickrange: [null, 1000 * 60 * 60 * 24],
+                //         value: "%b %e %H:%M"
+                //     },
+                //     {
+                //         dtickrange: [1000 * 60 * 60 * 24, null],
+                //         value: "%A"
+                //     }
+                // ],
 
             },
             height: 350,  // probably should be computed dynamically, according to the width of the screen
@@ -1115,6 +1099,15 @@ debugger
             */
         };
 
+
+        let currentDates = this.datepickerM.getPeriod();
+        let fromDate = currentDates[0];
+        let toDate = currentDates[1];
+
+        if (data.length === 0) {
+            layoutOptions.xaxis.range = [fromDate, toDate];
+        }
+
         let options = {
             scrollZoom: true,
             displaylogo: false,
@@ -1131,7 +1124,7 @@ debugger
         $(window).on('resize', () => { Plotly.Plots.resize(gd) })
 
 
-        let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
+        //let currentPeriod = this.currentPeriod = Radio.channel('dates').request('get');
 
         // based on this example: https://codepen.io/etpinard/pen/vXrRLR
         // internals.isUnderRelayout = false;
@@ -1153,6 +1146,7 @@ debugger
 
     },
 
+/*
     generateTs: function () {
 
         let currentDates = Radio.channel('dates').request('get');
@@ -1168,7 +1162,8 @@ debugger
 
         return ts;
     },
-
+    */
+    /*
     generateMeasurements: function (ts, index) {
 
         // let n = 24 * (60 / internals.measurementPeriodInMinutes)
@@ -1187,6 +1182,7 @@ debugger
         //return [null, null, null, null, null, ]
         return [2, 2, 2, 2, 2, ]
     },
+
 
     getXTick: function () {
 
@@ -1250,6 +1246,7 @@ debugger
 
         return { values: values, format: format };
     },
+    */
 
 
 

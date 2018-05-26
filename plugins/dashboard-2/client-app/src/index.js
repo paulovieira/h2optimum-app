@@ -19,6 +19,7 @@ const DateFns = require('date-fns');
 
 
 const Utils = require('./_common/utils');
+let UtilsEntities = require('_common/utils-entities');
 
 const Routes = require('./_config/routes');
 
@@ -49,6 +50,7 @@ internals.main = function(){
     //router.addRoutes(Routes.logout);
     router.addRoutes(Routes.catchAll);
 
+    UtilsEntities.createSingletons();
 
     // finalize the process - get basic information about the hotel and initialize the router
     // (which will show the initial view)
