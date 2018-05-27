@@ -165,9 +165,9 @@ debugger
             //url: '/v1/get-measurements',
             data: {
                 ///period: period
-                fromDate: DateFns.format(currentDates[0], 'YYYY-MM-DD'),
-                //toDate: DateFns.format(DateFns.addDays(currentDates[1], 1), 'YYYY-MM-DD'),
-                toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
+                fromDate: DateFns.format(currentDates[0]),
+                toDate: Utils.dateFnsFormat(DateFns.addDays(currentDates[1], 1)),
+                //toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
                 //deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
                 deviceMac: deviceMac
             },
@@ -794,8 +794,19 @@ debugger
         
         let currentDates = this.datepickerM.getPeriod();
         let fromDate = currentDates[0];
-        //let toDate = DateFns.addDays(currentDates[1], 1);
-        let toDate = currentDates[1];
+        let toDate = Utils.dateFnsFormat(DateFns.addDays(currentDates[1], 1));
+        //let toDate = currentDates[1];
+
+        let YYYY = parseInt(fromDate.split('-')[0]);
+        let MM   = parseInt(fromDate.split('-')[1]) - 1;
+        let DD   = parseInt(fromDate.split('-')[2]);
+        let xZeroTime = new Date(YYYY, MM, DD).getTime();
+
+        YYYY = parseInt(toDate.split('-')[0]);
+        MM   = parseInt(toDate.split('-')[1]) - 1;
+        DD   = parseInt(toDate.split('-')[2]);
+        let xOneTime = new Date(YYYY, MM, DD).getTime();
+
 
         //let maxY = 99;
         let layoutOptions = {
@@ -882,8 +893,8 @@ debugger
             shapes: [
                 {
                     type: 'rect',
-                    x0: new Date(fromDate).getTime(),
-                    x1: new Date(toDate).getTime(),
+                    x0: xZeroTime,
+                    x1: xOneTime,
 
                     y0: 0,
                     y1: 20,
@@ -894,8 +905,8 @@ debugger
                 },
                 {
                     type: 'rect',
-                    x0: new Date(fromDate).getTime(),
-                    x1: new Date(toDate).getTime(),
+                    x0: xZeroTime,
+                    x1: xOneTime,
 
                     y0: 20,
                     y1: 45,
@@ -906,8 +917,8 @@ debugger
                 },
                 {
                     type: 'rect',
-                    x0: new Date(fromDate).getTime(),
-                    x1: new Date(toDate).getTime(),
+                    x0: xZeroTime,
+                    x1: xOneTime,
 
                     y0: 45,
                     y1: maxY,
@@ -974,14 +985,16 @@ debugger
             }
 
             if (max === undefined) { return }
+debugger
+
 
             let layoutOptions = {
                 shapes: [
                 
                     {
                         type: 'rect',
-                        x0: new Date(fromDate).getTime(),
-                        x1: new Date(toDate).getTime(),
+                        x0: xZeroTime,
+                        x1: xOneTime,
 
                         y0: 0,
                         y1: 20,
@@ -992,8 +1005,8 @@ debugger
                     },
                     {
                         type: 'rect',
-                        x0: new Date(fromDate).getTime(),
-                        x1: new Date(toDate).getTime(),
+                        x0: xZeroTime,
+                        x1: xOneTime,
 
                         y0: 20,
                         y1: 45,
@@ -1005,8 +1018,8 @@ debugger
                     
                     {
                         type: 'rect',
-                        x0: new Date(fromDate).getTime(),
-                        x1: new Date(toDate).getTime(),
+                        x0: xZeroTime,
+                        x1: xOneTime,
 
                         y0: 45,
                         y1: max,
