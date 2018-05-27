@@ -164,11 +164,8 @@ debugger
             url: domain + '/v1/get-measurements',
             //url: '/v1/get-measurements',
             data: {
-                ///period: period
-                fromDate: DateFns.format(currentDates[0]),
+                fromDate: Utils.dateFnsFormat(currentDates[0]),
                 toDate: Utils.dateFnsFormat(DateFns.addDays(currentDates[1], 1)),
-                //toDate: DateFns.format(currentDates[1], 'YYYY-MM-DD'),
-                //deviceMac: '12:34:56:ab:cd:ef' // -- special mac address to by pass the where 'device_mac = ...'
                 deviceMac: deviceMac
             },
         }))
@@ -283,7 +280,7 @@ debugger
 
 
                 for (let i = 0; i < readingsMac.length; i++) {
-                    readingsMac[i].tsFormatted = DateFns.format(readingsMac[i].ts, 'YYYY-MM-DDTHH:mm:ss')
+                    readingsMac[i].tsFormatted = Utils.dateFnsFormat(readingsMac[i].ts, 'YYYY-MM-DDTHH:mm:ss')
                 }
 
 
@@ -309,8 +306,8 @@ debugger
 
 
                     // store ts and battery
-                    dataMac[0].push(objTemp.ts);
-
+                    //dataMac[0].push(objTemp.ts);
+                    dataMac[0].push(objTemp.tsFormatted);
 
                     let l = readingsBatch.length;
 
