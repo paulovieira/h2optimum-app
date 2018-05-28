@@ -775,7 +775,8 @@ debugger
                     trace.visible = 'legendonly';
                 }
 
-                trace.x = dataRaw[key][0];
+                //trace.x = dataRaw[key][0];
+                trace.x = dataRaw[key][0].map(dateStr => new Date(dateStr));
                 trace.y = dataRaw[key][i];
 
                 data.push(trace);
@@ -794,16 +795,17 @@ debugger
         let toDate = Utils.dateFnsFormat(DateFns.addDays(currentDates[1], 1));
         //let toDate = currentDates[1];
 
-        let YYYY = parseInt(fromDate.split('-')[0]);
-        let MM   = parseInt(fromDate.split('-')[1]) - 1;
-        let DD   = parseInt(fromDate.split('-')[2]);
-        let xZeroTime = new Date(YYYY, MM, DD).getTime();
+        //let YYYY = parseInt(fromDate.split('-')[0]);
+        //let MM   = parseInt(fromDate.split('-')[1]) - 1;
+        //let DD   = parseInt(fromDate.split('-')[2]);
+        //let xZeroTime = new Date(YYYY, MM, DD).getTime();
+        let xZeroTime = DateFns.parse(fromDate + 'T00:00:00.000Z')
 
-        YYYY = parseInt(toDate.split('-')[0]);
-        MM   = parseInt(toDate.split('-')[1]) - 1;
-        DD   = parseInt(toDate.split('-')[2]);
-        let xOneTime = new Date(YYYY, MM, DD).getTime();
-
+        // YYYY = parseInt(toDate.split('-')[0]);
+        // MM   = parseInt(toDate.split('-')[1]) - 1;
+        // DD   = parseInt(toDate.split('-')[2]);
+        // let xOneTime = new Date(YYYY, MM, DD).getTime();
+        let xOneTime = DateFns.parse(toDate  + 'T00:00:00.000Z')
 
         //let maxY = 99;
         let layoutOptions = {
@@ -825,15 +827,15 @@ debugger
                 //rangemode: 'tozero',
                 tickangle: 0,
                 //tickformat: '%H:%M',
-
+                /*
                 xtickformatstops:
                 [
-                /*
+                
                     {
                         dtickrange: [null, 1000],
                         value: "%H:%M:%S.%L"
                     },
-                    */
+                    
                     {
                         dtickrange: [null, internals.ONE_HOUR],
                         //value: "%b %e %H:%M"
@@ -871,11 +873,12 @@ debugger
                     },
 
                 ],
+                */
 
             },
             height: 400,  // probably should be computed dynamically, according to the width of the screen
             margin: {
-                l: 70,
+                l: 50,
                 r: 50,
                 b: 75,
                 t: 0,
@@ -982,8 +985,6 @@ debugger
             }
 
             if (max === undefined) { return }
-debugger
-
 
             let layoutOptions = {
                 shapes: [

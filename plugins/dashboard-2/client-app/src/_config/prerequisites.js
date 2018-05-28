@@ -3,6 +3,7 @@ var Q = require('q');
 var Backbone = require('backbone');
 var _ = require('underscore');
 var Radio = require('backbone.radio');
+let DateFns = require('date-fns')
 
 var Utils = require('../_common/utils');
 
@@ -34,3 +35,4 @@ if (true) {
 }
 global.Radio = Radio;
 global.$ = $;
+global.DateFns = DateFns;
