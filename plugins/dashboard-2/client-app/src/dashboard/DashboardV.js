@@ -72,6 +72,10 @@ let View = Mn.View.extend({
             return
         }
 
+        // TODO: place the new installation as a small item in the top of this view
+        let newInstallation = data.pop();
+        data.splice(0, 0, newInstallation);
+
         // we'll always have at least 1 card (the "add controller" card)
         /*
         this.getUI('main-content').append(`
