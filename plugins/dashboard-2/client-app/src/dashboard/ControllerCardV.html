@@ -1,3 +1,54 @@
+
+<div class="card card-bordered card-shadowed">
+
+  <header class="card-header py-20" style="xjustify-content: center;">
+    <h2 class="card-title" style="font-size: 22px;">
+      <a style="xpadding: 15px 30px;" class="hover-info" href="#/groups/{{ slug }}">{{ name }}</a>
+    </h2>
+    <ul class="card-controls">
+      <li class="dropdown">
+        <a data-toggle="dropdown" href="#" aria-expanded="false"><i class="ti-more-alt rotate-90" style="font-size: 125%;"></i></a>
+        <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: top, left; top: 24px; left: 26px;">
+          <a class="dropdown-item" href="#" data-id="edit-installation"><i class="ti-pencil-alt"></i>Edit</a>
+          <a class="dropdown-item" href="#" data-id="delete-installation"><i class="ti-trash"></i> Delete</a>
+        </div>
+      </li>
+    </ul>
+  </header>
+
+  <div class="flexbox flex-justified bt-1 border-light py-12 bg-lighter text-center">
+    <a class="text-muted" style="cursor: default;">
+      <i style="" class="fa fa-cog fa-2x {{ 'fa-spin-4s text-info' if statusCode == 1 }}"></i><br>
+      <span style="display: block;">Current status:  {{ statusMessage }} </span>
+      <span style="display: block;">{{ statusMessage2 }}</span>
+    </a>
+    <a class="text-muted" style="cursor: default;">
+      <i style="" class="icon fa fa-2x fa-stethoscope 
+
+      {% if diagnosticCode == 0 %}
+        text-success
+      {% elif diagnosticCode == 1 %}
+        text-danger
+      {% else %}
+        text-warning
+      {% endif %}
+
+      "></i><br>
+      <span style="display: block;">Quick diagnostic:  {{ diagnosticMessage }}</span> 
+      <!-- <span style="display: block;">{{ diagnosticMessage2 }}</span>  -->
+    </a>
+  </div>
+  <div class="x-flexbox" data-id="map" style="height: 200px;">
+  
+  </div>
+</div>
+
+
+
+
+
+{# OLD VERSION - to be deleted
+
 <div class="card card-bordered card-shadowed">
   <div class="card-body pt-40 text-center">
     <h2 style="margin: 0">
@@ -25,10 +76,11 @@
 
       "></i><br>
       <span style="display: block;">Quick diagnostic:  {{ diagnosticMessage }}</span> 
-      {# <span style="display: block;">{{ diagnosticMessage2 }}</span> #}
+      <!-- <span style="display: block;">{{ diagnosticMessage2 }}</span>  -->
     </a>
   </div>
   <div class="x-flexbox" data-id="map" style="height: 200px;">
   
   </div>
 </div>
+#}

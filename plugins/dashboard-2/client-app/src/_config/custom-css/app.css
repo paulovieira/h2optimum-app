@@ -133,3 +133,17 @@ a:hover, a:focus {
   border: 2px solid #fff;
   background-color: #57c7d4;
 }
+
+
+
+.fab-fixed-2adapt {
+  position: fixed;
+  right: 40px;
+  /* bottom: 40px; to place the button at the top */
+ }
+
+
+/* 3 dots "hamburger" */
+.card-controls li > a:hover {
+  color: #48b0f7;  /* use the 'info' color */
+}

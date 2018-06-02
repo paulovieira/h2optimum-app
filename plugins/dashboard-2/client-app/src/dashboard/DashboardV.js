@@ -5,6 +5,8 @@ var Radiox = require('backbone.radio');
 let  Q = require('q');
 let ControllerCardV = require('./ControllerCardV')
 let NewControllerCardV = require('./NewControllerCardV')
+let AddOrEditInstallationV = require('./AddOrEditInstallationV')
+let Utils = require('_common/utils')
 
 let internals = {};
 
@@ -19,14 +21,11 @@ internals.cropTypes = {
 };
 
 internals.soilTypes = {
-    'soil_loam': 'loam',
-    'soil_sandy_loam': 'sandy loam',
-    'soil_light_texture_silt_loam': 'light texture silt loam',
-    'soil_heavier_texture_silt_loam': 'heavier texture silt loam',
-    'soil_fine_sand': 'fine sand',
-    'soil_type_x': 'soil type X description',
-    'soil_type_y': 'soil type Y description',
-    'soil_type_z': 'soil type Z description',
+    'loamy_sand': 'loamy_sand',
+    'fine_sandy_loam': 'fine_sandy_loam',
+    'sandy_loam': 'sandy_loam',
+    'loam': 'loam',
+    'clay': 'clay',
 };
 
 
@@ -50,7 +49,13 @@ let View = Mn.View.extend({
 
     ui: {
         'footer': '[data-region-id="footer"]',
-        'main-content': 'div.main-content'
+        'main-content': 'div.main-content',
+        'new-installation': '[data-id="new-installation"]',
+        'cards-container': '[data-id="cards-container"]'
+    },
+
+    events: {
+        'click @ui.new-installation': 'addNewInstallation'
     },
 
     regions: {
@@ -92,7 +97,7 @@ let View = Mn.View.extend({
         let controllerIndex = 0;
         for (let i = 0; i < numRows; i++) {
 
-            this.getUI('main-content').append(`
+            this.getUI('cards-container').append(`
                 <div class="row" data-id="row-${ i }">
                 </div>
             `);
@@ -105,7 +110,7 @@ let View = Mn.View.extend({
                 this.$(`[data-id="row-${ i }"]`).append(`
                     <div class="col-sm-4" data-region-id="card-${ controllerIndex }">
                     </div>
-                `)
+                `) 
 
                 let regionName = `card-${ controllerIndex }`;
                 let regionSelector = `[data-region-id="card-${ controllerIndex }"]`;
@@ -120,17 +125,9 @@ let View = Mn.View.extend({
             let controllerCardV;
             let model = new Backbone.Model(data[controllerIndex]);
 
-            if (model.get('type') === 'new') {
-                controllerCardV = new NewControllerCardV({ 
-                    model: model
-                });
-            }
-            else {
-                controllerCardV = new ControllerCardV({ 
-                    model: model
-                });
-            }
-
+            controllerCardV = new ControllerCardV({ 
+                model: model
+            });
 
             this.showChildView(`card-${ controllerIndex }`, controllerCardV);
         }
@@ -191,14 +188,6 @@ let View = Mn.View.extend({
             })
 
 
-            var newController = [{
-                type: 'new',
-                name: 'New installation',
-                description: 'Click to add a new installation',
-            }]
-
-            installations = installations.concat(newController);
-
             // TODO: location is location
             installations.forEach(obj => { obj.location = [51.505, -0.09] })
 
@@ -211,6 +200,20 @@ let View = Mn.View.extend({
 
         return p;
 
+    },
+
+    addNewInstallation: function(ev){
+
+        var addOrEditInstallationV = new AddOrEditInstallationV({
+
+            model: new Backbone.Model,
+            onCloseModal: options => {
+
+                this.getUI('new-installation').find('button').removeClass('active')
+            }
+        });
+
+        Utils.showAsModal(addOrEditInstallationV, 'small');
     }
 });
 

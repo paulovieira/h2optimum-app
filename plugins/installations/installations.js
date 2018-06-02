@@ -15,11 +15,12 @@ let internals = {};
 internals.installationsSchema = Joi.object({
     id: Joi.number().integer(),
     // userId: Joi.number().integer(),  
-    soilTypeCode: Joi.string().allow(['soil_loam', 'soil_sandy_loam', 'soil_light_texture_silt_loam', 'soil_heavier_texture_silt_loam', 'soil_fine_sand', 'soil_type_x', 'soil_type_y', 'soil_type_z']).required(),
-    cropTypeCode: Joi.string().allow(['crop_corn', 'crop_fruits', 'crop_wheat', 'crop_grapes', 'crop_type_x', 'crop_type_y', 'crop_type_z']).required(),
+    soilTypeCode: Joi.string().allow(['loamy_sand', 'fine_sandy_loam', 'sandy_loam', 'loam', 'clay']).required(),
+    //cropTypeCode: Joi.string().allow(['crop_corn', 'crop_fruits', 'crop_wheat', 'crop_grapes', 'crop_type_x', 'crop_type_y', 'crop_type_z']).required(),
     name: Joi.string().required(),
     //slug: Joi.string().allow(''),
     description: Joi.string().allow(''),
+    timezone: Joi.string().allow(''),
     //location TBD
     active:  Joi.bool()
 });
@@ -34,6 +35,7 @@ internals.APItoDB = {
     'name': 'name',
     'slug': 'slug',
     'description': 'description',
+    'timezone': 'timezone',
     'location': 'location',
     'active': 'active',
 };

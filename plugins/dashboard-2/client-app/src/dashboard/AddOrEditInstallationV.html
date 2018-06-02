@@ -31,14 +31,11 @@
             <div class="form-group">
                 <label for="_input-4">Soil type</label>
                 <select class="selectpicker form-control form-control-sm show-tick mr-sm-2" name="soilTypeCode" data-width="fit" >
-                    <option value="soil_loam" {{ "selected" if soilTypeCode == "soil_loam" }}>Loam</option>
-                    <option value="soil_sandy_loam" {{ "selected" if soilTypeCode == "soil_sandy_loam" }}>Sandy loam</option>
-                    <option value="soil_light_texture_silt_loam" {{ "selected" if soilTypeCode == "soil_light_texture_silt_loam" }}>Light texture silt loam</option>
-                    <option value="soil_heavier_texture_silt_loam" {{ "selected" if soilTypeCode == "soil_heavier_texture_silt_loam" }}>Heavier texture silt loam</option>
-                    <option value="soil_fine_sand" {{ "selected" if soilTypeCode == "soil_fine_sand" }}>Fine sand</option>
-                    <option value="soil_type_x" {{ "selected" if soilTypeCode == "soil_type_x" }}>Soil type X</option>
-                    <option value="soil_type_y" {{ "selected" if soilTypeCode == "soil_type_y" }}>Soil type Y</option>
-                    <option value="soil_type_z" {{ "selected" if soilTypeCode == "soil_type_z" }}>Soil type Z</option>
+                    <option value="loamy_sand" {{ "selected" if soilTypeCode == "loamy_sand" }}>Loamy Sand</option>
+                    <option value="fine_sandy_loam" {{ "selected" if soilTypeCode == "fine_sandy_loam" }}>Fine Sandy Loam</option>
+                    <option value="sandy_loam" {{ "selected" if soilTypeCode == "sandy_loam" }}>Sandy Loam</option>
+                    <option value="loam" {{ "selected" if soilTypeCode == "loam" }}>Loam</option>
+                    <option value="clay" {{ "selected" if soilTypeCode == "clay" }}>Clay</option>
 
                 </select>
             </div>
@@ -57,6 +54,18 @@
                 </select>
             </div>
             #}
+
+            <div class="form-group">
+                <label for="_input-4">Timezone</label>
+                <select class="selectpicker form-control form-control-sm show-tick mr-sm-2" name="timezone" data-width="fit" >
+                    <option value="Europe/Lisbon" {{ "selected" if timezone == "Europe/Lisbon" }}>Europe/Lisbon</option>
+                    <option value="Europe/Madrid" {{ "selected" if timezone == "Europe/Madrid" }}>Europe/Madrid</option>
+                    <option value="Europe/Paris" {{ "selected" if timezone == "Europe/Paris" }}>Europe/Paris</option>
+                    <option value="Europe/Berlin" {{ "selected" if timezone == "Europe/Berlin" }}>Europe/Berlin</option>
+                    <option value="Europe/Prague" {{ "selected" if timezone == "Europe/Prague" }}>Europe/Prague</option>
+                </select>
+            </div>
+            
 
         </div>
     </div>

@@ -371,10 +371,22 @@ debugger
 
             for (let i = 1; i <= 4; i++) {
                 let trace = $.extend(true, {}, UtilsPlotly.getTraceBase());
-                trace.name = device.description + '_' + i;
+
+                let description = '';
+
+                if (devices.length === 1) {
+                    description = 'sensor';
+                }
+                else {
+                    description = device.description;
+                }
+
+                trace.name = description + ' ' + i;    
+                
 
                 if (i === 4) { 
-                    trace.name = device.description + '_t';
+                    //trace.name = device.description + '_temperature';
+                    trace.name = 'temperature';
                     trace.visible = 'legendonly';
                 }
 

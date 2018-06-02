@@ -46,12 +46,40 @@ END IF;
 /*** BEGIN CODE FOR CHANGES  ***/
 
 insert into t_installations(user_id, soil_type_code, crop_type_code, name, slug, description) values 
-    (2, 'soil_type_x', 'crop_type_x', 'Permalab - demo', 'permalab-demo', ''),
-    (3, 'soil_type_x', 'crop_type_x', 'Casa do Lecas - demo', 'casa-do-lecas-demo', '');
+    (2, 'loamy_sand', 'crop_type_x', 'Permalab - demo', 'permalab-demo', ''),
+    (3, 'loamy_sand', 'crop_type_x', 'Casa do Lecas - demo', 'casa-do-lecas-demo', '');
 
 
 /*** END CODE FOR CHANGES  ***/
 
 END;
 $$;
+
+
+
+
+
+
+
+DO $$
+
+DECLARE
+patch_exists int := _v.register_patch('add_timezone_column', '');
+
+BEGIN
+
+IF patch_exists THEN
+    RETURN;
+END IF;
+
+/*** BEGIN CODE FOR CHANGES  ***/
+
+alter table t_installations add column timezone text default '';
+
+/*** END CODE FOR CHANGES  ***/
+
+END;
+$$;
+
+
 

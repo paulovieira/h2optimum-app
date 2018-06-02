@@ -51,6 +51,7 @@ new_row.slug           := COALESCE(new_row.slug, current_row.slug);
 new_row.description    := COALESCE(new_row.description, current_row.description);
 new_row.location       := COALESCE(new_row.location, current_row.location, '{}'::jsonb);
 new_row.active         := COALESCE(new_row.active, current_row.active, true);
+new_row.timezone       := COALESCE(new_row.timezone, current_row.timezone, '');
 
 
 -- the rest of the code is similar to 2.1; we just add the on conflict clause;
@@ -63,7 +64,8 @@ insert into t_installations(
   slug,
   description,     
   location,
-  active
+  active,
+  timezone
 )
 values (
   new_row.id,
@@ -74,7 +76,8 @@ values (
   new_row.slug,             
   new_row.description,             
   new_row.location,     
-  new_row.active          
+  new_row.active,
+  new_row.timezone          
 )
 
 /*  
@@ -91,7 +94,8 @@ on conflict (id) do update set
   slug           = excluded.slug,             
   description    = excluded.description,             
   location       = excluded.location,     
-  active         = excluded.active  
+  active         = excluded.active,  
+  timezone       = excluded.timezone  
 
 returning * 
 into strict new_row;
@@ -115,6 +119,7 @@ select * from upsert_installations('{
     "name"          : "installation name",
     "slug"          : "installation-name",
     "description"   : "installation desc"
+    "timezone"      : "Europe/Lisbon"
 }');
 
 -- update one field in the previous record

@@ -1,13 +1,23 @@
-var Mn = require('backbone.marionette');
-var L = require('leaflet');
+let Mn = require('backbone.marionette');
+let L = require('leaflet');
+let DeleteInstallationV = require('./DeleteInstallationV');
+let AddOrEditInstallationV = require('./AddOrEditInstallationV');
+let Utils = require('_common/utils');
 
-var View = Mn.View.extend({
+let View = Mn.View.extend({
 
     initialize: function(){
     },
 
     ui: {
-        'map': '[data-id="map"]'
+        'map': '[data-id="map"]',
+        'edit-installation': '[data-id="edit-installation"]',
+        'delete-installation': '[data-id="delete-installation"]'
+    },
+
+    events: {
+        'click @ui.edit-installation': 'editInstallation',
+        'click @ui.delete-installation': 'deleteInstallation'
     },
 
     onAttach: function() {
@@ -30,6 +40,36 @@ var View = Mn.View.extend({
         }).addTo(map);
 
         L.marker(center).addTo(map);
+    },
+
+    editInstallation: function (ev) {
+
+        var editInstallationV = new AddOrEditInstallationV({
+            model: this.model,
+            onCloseModal: options => {
+
+                if (options.refreshList) {
+                    Radio.channel('public').trigger('refresh:installations');
+                }
+            }
+        });
+
+        Utils.showAsModal(editInstallationV, 'small'); 
+    },
+
+    deleteInstallation: function (ev) {
+
+        var deleteInstallationV = new DeleteInstallationV({
+            model: this.model,
+            onCloseModal: options => {
+
+                if (options.refreshList) {
+                    Radio.channel('public').trigger('refresh:installations');
+                }
+            }
+        });
+
+        Utils.showAsModal(deleteInstallationV, 'small'); 
     }
 });
 
