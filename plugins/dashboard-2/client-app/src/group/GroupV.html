@@ -96,10 +96,29 @@
       <div class="col-sm-12">
 
         <div class="card" >
-          <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+
+
+          <header class="card-header card-inverse card-info py-20" style="xjustify-content: center;">
             <h5 class="card-title card-title-bold" style="font-weight: 300;">Measurements</h5>
 
+            <ul class="card-controls">
+              <li class="dropdown">
+                <a data-toggle="dropdown" href="#" aria-expanded="false"><i class="ti-more-alt rotate-90" style="font-size: 125%;"></i></a>
+                <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: top, left; top: 24px; left: 26px;">
+                  <a class="dropdown-item" href="#" data-id="download-xls"><i class="fa fa-file-excel-o"></i>Download xls</a>
+                  <a class="dropdown-item" href="#" data-id="download-img"><i class="fa fa-file-picture-o"></i>Download image</a>
+                  <a class="dropdown-item" href="#" data-id="edit-threshold"><i class="fa fa-pencil-square-o"></i>Edit thresholds</a>
+                </div>
+              </li>
+            </ul>
           </header>
+
+                      {#
+                      <header class="card-header card-inverse card-info" style="padding: 11px 20px;">
+                        <h5 class="card-title card-title-bold" style="font-weight: 300;">Measurements</h5>
+
+                      </header>
+                      #}
 
           <div class="card-body" style="padding-top: 0.5rem; ">
 

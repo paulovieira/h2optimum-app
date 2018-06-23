@@ -73,11 +73,17 @@ let View = Mn.View.extend({
         'chart-container-battery': '[data-id="chart-container-battery"]',  // to be removed
         'controller-options': '[data-id="controllers-table"] tr a',
         'add-automatism': '[data-id="add-automatism"]',
+
+        'download-xls': '[data-id="download-xls"]',
+        'download-img': '[data-id="download-img"]'
     },
 
     events: {
         'change @ui.checkbox-switch-status': 'onChangeStatus',
         'click @ui.add-automatism': 'onClickAddAutomatism',
+
+        'click @ui.download-xls': 'downloadXls',
+        'click @ui.download-img': 'downloadImg'
     },
 
     regions: {
@@ -361,6 +367,9 @@ debugger
 
     refreshPlotly: function(dataRaw) {
 
+
+        internals.dataRaw = dataRaw;
+
         // array of traces (plotly objects)
         let data = [];
         let devices = Radio.channel('public').request('devices');
@@ -417,7 +426,7 @@ debugger
         let DD   = parseInt(fromDate.split('-')[2]);
         //let xZeroTime = newDateFns.parse(fromDate + 'T00:00:00.000Z')
         let xZeroTime = new Date(YYYY, MM, DD)
-        debugger
+        //debugger
 
         // YYYY = parseInt(toDate.split('-')[0]);
         // MM   = parseInt(toDate.split('-')[1]) - 1;
@@ -566,7 +575,8 @@ debugger
             ],
         }
 
-        let gd = this.gd = this.getUI('chart-container').get(0);
+        let gd = this.getUI('chart-container').get(0);
+        internals.gdSensors = gd;
 
         Plotly.newPlot(gd, data, layoutOptions, options);
         // setTimeout(() => {
@@ -748,7 +758,8 @@ debugger
             ],
         }
 
-        let gd = this.gd = this.getUI('chart-container-battery').get(0);
+        let gd = this.getUI('chart-container-battery').get(0);
+        internals.gdBattery = gd;
 
         Plotly.newPlot(gd, data, layoutOptions, options);
 
@@ -775,6 +786,138 @@ debugger
         */
 
 
+    },
+
+    downloadXls: function (ev) {
+
+        debugger;
+        // 1) get data for the period
+        // 2) tranform into the correcft structure for the xls
+        // 3) export with the library
+
+        // dynamically loading the scripts for zipcelx: https://github.com/egeriis/zipcelx
+
+        // we do it this way
+        // instead of using the dynamic imports from webpack to keep it simpler
+        // (and also because zipcelx only works from the window object anyway...)
+
+        if (internals.dataRaw === undefined) {
+            throw new Error('dataRaw is undefined')
+        };
+
+        Q($.ajax({
+            url: 'https://cdn.jsdelivr.net/npm/zipcelx@1.4.0/lib/standalone.min.js',
+            dataType: 'script'
+        }))
+        .then(() => {
+
+            // the jsPdf table plugin is not installed (somewhere inside window.jsPDF)
+            this._generateXlsx();
+        })
+        .catch(err => {
+            
+            alert('ERROR: could not load the zipcelx scripts');
+        });
+    },
+
+
+    _generateXlsx: function () {
+
+        let devices = Radio.channel('public').request('devices');
+        let sheetData = []; // array of arrays
+        
+
+        let headerRow = [];
+        let hasDateColumn = false;
+        for (let deviceKey in internals.dataRaw) {
+
+            let descriptionSensor = '';
+            let descriptionTemperature = '';
+            let descriptionBattery = '';
+
+            if (devices.length === 1) {
+                descriptionSensor = 'sensor';
+                descriptionTemperature = 'temperature';
+                descriptionBattery = 'battery';
+            }
+            else {
+
+                let device = devices.filter(obj => obj.mac === deviceKey)[0]
+
+                descriptionSensor = device.description;
+                descriptionTemperature = device.description + '_t';
+                descriptionBattery = device.description + '_b';
+            }
+
+            
+            if (hasDateColumn === false) {
+                headerRow.push({ value: 'Date',                    type: 'string' })    
+                hasDateColumn = true;
+            }
+            
+            headerRow.push({ value: descriptionSensor + '_1 ', type: 'string' })
+            headerRow.push({ value: descriptionSensor + '_2 ', type: 'string' })
+            headerRow.push({ value: descriptionSensor + '_3 ', type: 'string' })
+            headerRow.push({ value: descriptionTemperature,    type: 'string' })
+            headerRow.push({ value: descriptionBattery,       type: 'string' })
+        }
+
+        
+        sheetData.push(headerRow);
+
+        for (let device in internals.dataRaw) {
+
+            let dataForDevice = internals.dataRaw[device];
+            
+            for (let i = 0; i < dataForDevice[0].length; i++) {
+                let dataRow = []
+                dataRow.push({ value: DateFns.format(dataForDevice[0][i], 'YYYY-MM-DD HH:mm:ss') })
+                dataRow.push({ value: dataForDevice[1][i] })
+                dataRow.push({ value: dataForDevice[2][i] })
+                dataRow.push({ value: dataForDevice[3][i] })
+                dataRow.push({ value: dataForDevice[4][i] })
+                dataRow.push({ value: dataForDevice[5][i] })
+
+                sheetData.push(dataRow);
+            }
+        }
+
+        let currentDates = this.datepickerM.getPeriod();
+        let fromDate = Utils.dateFnsFormat(currentDates[0]);
+        let toDate = Utils.dateFnsFormat(currentDates[1]);
+
+        let config = {
+            filename: 'readings_' + fromDate + '_' + toDate,
+            sheet: {
+                data: sheetData
+            }
+        }
+
+
+        global.zipcelx(config);
+
+    },
+
+    downloadImg: function (ev) {
+
+        let currentDates = this.datepickerM.getPeriod();
+        let fromDate = Utils.dateFnsFormat(currentDates[0]);
+        let toDate = Utils.dateFnsFormat(currentDates[1]);
+        
+        let downloadOptions = {
+            filename: 'readings_' + fromDate + '_' + toDate,
+            scale: '5',
+            format: 'png'
+        }
+
+        this._downloadImg(downloadOptions);
+    },
+
+    _downloadImg: function (downloadOptions) {
+
+        Plotly.downloadImage(internals.gdSensors, downloadOptions)
+          .then(filename => {})
+          .catch(err => {})
     },
 
 /*
