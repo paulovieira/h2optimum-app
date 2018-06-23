@@ -75,7 +75,8 @@ let View = Mn.View.extend({
         'add-automatism': '[data-id="add-automatism"]',
 
         'download-xls': '[data-id="download-xls"]',
-        'download-img': '[data-id="download-img"]'
+        'download-img': '[data-id="download-img"]',
+        'edit-threshold': '[data-id="edit-threshold"]',
     },
 
     events: {
@@ -83,7 +84,8 @@ let View = Mn.View.extend({
         'click @ui.add-automatism': 'onClickAddAutomatism',
 
         'click @ui.download-xls': 'downloadXls',
-        'click @ui.download-img': 'downloadImg'
+        'click @ui.download-img': 'downloadImg',
+        'click @ui.edit-threshold': 'editThreshold'
     },
 
     regions: {
@@ -448,7 +450,9 @@ debugger
                 // see also: 'd3-format specifiers example': http://bl.ocks.org/zanarmstrong/05c1e95bf7aa16c4768e
                 
                 //fixedrange: true, // disable zoom for y-axis
-                hoverformat: '.3s'
+                hoverformat: '.3s',
+                rangemode: 'tozero'
+                //range: [-5,  _.max([maxY, 60]) + 5]
 
             },
             xaxis: {
@@ -518,7 +522,45 @@ debugger
             legend: {
                 orientation: 'h',
             },
+/*
+            shapes: [
+                {
+                    type: 'line',
+                    x0: xZeroTime,
+                    y0: 10,
 
+                    x1: xOneTime,
+                    y1: 10,
+
+                    line: {
+                        color: 'blue',
+                        width: 1,
+                        dash: 'dashdot'
+                    },
+
+                },
+
+                {
+                    type: 'line',
+                    x0: xZeroTime,
+                    y0: 30,
+
+                    x1: xOneTime,
+                    y1: 30,
+
+                    line: {
+                        color: 'gray',
+                        width: 0.5,
+                        //dash: 'dashdot'
+                    },
+
+                },
+
+            ]
+            */
+
+            // shapes wih rectangles
+            /*
             shapes: [
                 {
                     type: 'rect',
@@ -526,40 +568,190 @@ debugger
                     x1: xOneTime,
 
                     y0: 0,
-                    y1: 20,
+                    y1: 10,
                     line: {
                         width: 0
                     },
-                    fillcolor: 'rgba(0, 102, 204, 0.1)'
+                    //fillcolor: 'rgba(0, 102, 204, 0.4)'
+                    fillcolor: 'blue',
+                    opacity: 0.2
+
                 },
                 {
                     type: 'rect',
                     x0: xZeroTime,
                     x1: xOneTime,
 
-                    y0: 20,
-                    y1: 45,
+                    y0: 10,
+                    y1: 30,
                     line: {
                         width: 0
                     },
-                    fillcolor: 'rgba(0, 128, 0, 0.1)'
+                    //fillcolor: 'rgba(0, 128, 0, 0.2)'
+                    fillcolor: 'green',
+                    opacity: 0.2
+                },
+
+                {
+                    type: 'rect',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+
+                    y0: 30,
+                    y1: 100,
+                    line: {
+                        width: 0
+                    },
+                    //fillcolor: 'rgba(0, 128, 0, 0.2)'
+                    fillcolor: 'orange',
+                    opacity: 0.2
                 },
                 {
                     type: 'rect',
                     x0: xZeroTime,
                     x1: xOneTime,
 
-                    y0: 45,
+                    y0: 100,
                     y1: maxY,
                     line: {
                         width: 0
                     },
-                    fillcolor: 'rgba(153, 0, 0, 0.1)'
+                    //fillcolor: 'rgba(153, 0, 0, 0.2)'
+                    fillcolor: 'red',
+                    opacity: 0.2
                 },
+
+            ]
+            */
+
+            shapes: [
+            /*
+                {
+                    type: 'rect',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+
+                    y0: 0,
+                    y1: 10,
+                    line: {
+                        width: 0
+                    },
+                    //fillcolor: 'rgba(0, 102, 204, 0.4)'
+                    fillcolor: 'blue',
+                    opacity: 0.2
+
+                },
+                */
+
+                /*
+                {
+                    type: 'rect',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+
+                    y0: 10,
+                    y1: 30,
+                    line: {
+                        width: 0
+                    },
+                    //fillcolor: 'rgba(0, 128, 0, 0.2)'
+                    fillcolor: 'gray',
+                    opacity: 0.2
+                },
+                */
+/*
+                {
+                    type: 'rect',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+
+                    y0: 30,
+                    y1: 100,
+                    line: {
+                        width: 0
+                    },
+                    //fillcolor: 'rgba(0, 128, 0, 0.2)'
+                    fillcolor: 'orange',
+                    opacity: 0.2
+                },
+                */
+
+                {
+                    type: 'line',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+                    y0: 10,
+                    y1: 10,
+                    line: {
+                      color: 'rgba(128, 128, 128, 0.99)',
+                      width: 0.5,
+                      dash: '10px 10px'
+                    },
+                },
+
+                {
+                    type: 'line',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+                    y0: 60,
+                    y1: 60,
+                    line: {
+                      color: 'rgba(128, 128, 128, 0.99)',
+                      width: 0.5,
+                      dash: '10px 10px'
+                    },
+                },
+
+                {
+                    type: 'rect',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+
+                    y0: 10,
+                    y1: 60,
+                    line: {
+                        width: 0
+                    },
+                    fillcolor: 'rgba(128, 128, 128, 0.2)',
+                },
+
 
             ]
             
         };
+
+
+        if (maxY > 100) {
+
+            layoutOptions.shapes.push(
+
+                {
+                    type: 'line',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+                    y0: 100,
+                    y1: 100,
+                    line: {
+                      color: 'rgba(128, 128, 128, 0.99)',
+                      width: 0.5,
+                      dash: '10px 10px'
+                    },
+                },
+
+                {
+                    type: 'rect',
+                    x0: xZeroTime,
+                    x1: xOneTime,
+
+                    y0: 100,
+                    y1: maxY,
+                    line: {
+                        width: 0
+                    },
+                    fillcolor: 'rgba(128, 128, 128, 0.2)',
+                }
+            )
+        }
 
         if (data.length === 0) {
             layoutOptions.xaxis.range = [fromDate, toDate];
@@ -607,7 +799,7 @@ debugger
         gd.on('plotly_relayout', UtilsPlotly.updateRangeOnZoomOut.bind(this))
         */
 
-        gd.on('plotly_relayout', (ev) => {
+        gd.on('xplotly_relayout', (ev) => {
 
             let max;
             if (_.isNumber(ev['yaxis.range[1]'])) {
@@ -625,23 +817,11 @@ debugger
                         x1: xOneTime,
 
                         y0: 0,
-                        y1: 20,
+                        y1: 10,
                         line: {
                             width: 0
                         },
-                        fillcolor: 'rgba(0, 102, 204, 0.1)'
-                    },
-                    {
-                        type: 'rect',
-                        x0: xZeroTime,
-                        x1: xOneTime,
-
-                        y0: 20,
-                        y1: 45,
-                        line: {
-                            width: 0
-                        },
-                        fillcolor: 'rgba(0, 128, 0, 0.1)'
+                        fillcolor: 'rgba(0, 102, 204, 0.99)'
                     },
                     
                     {
@@ -649,12 +829,38 @@ debugger
                         x0: xZeroTime,
                         x1: xOneTime,
 
-                        y0: 45,
+                        y0: 10,
+                        y1: 30,
+                        line: {
+                            width: 0
+                        },
+                        fillcolor: 'rgba(0, 128, 0, 0.99)'
+                    },
+                    
+                    {
+                        type: 'rect',
+                        x0: xZeroTime,
+                        x1: xOneTime,
+
+                        y0: 30,
+                        y1: 100,
+                        line: {
+                            width: 0
+                        },
+                        fillcolor: 'rgba(153, 0, 0, 0.99)'
+                    },
+
+                    {
+                        type: 'rect',
+                        x0: xZeroTime,
+                        x1: xOneTime,
+
+                        y0: 100,
                         y1: max,
                         line: {
                             width: 0
                         },
-                        fillcolor: 'rgba(153, 0, 0, 0.1)'
+                        fillcolor: 'rgba(153, 0, 0, 0.99)'
                     },
 
                 ]
@@ -903,7 +1109,7 @@ debugger
         let currentDates = this.datepickerM.getPeriod();
         let fromDate = Utils.dateFnsFormat(currentDates[0]);
         let toDate = Utils.dateFnsFormat(currentDates[1]);
-        
+
         let downloadOptions = {
             filename: 'readings_' + fromDate + '_' + toDate,
             scale: '5',
@@ -919,6 +1125,21 @@ debugger
           .then(filename => {})
           .catch(err => {})
     },
+
+    editThreshold: function (ev){
+
+        var EditThresholdsV = require('./EditThresholdsV');
+
+        var editThresholdsV = new EditThresholdsV({
+            onCloseModal: options => {
+                
+                // TODO: refresh table with controllers
+            }
+        });
+
+        Utils.showAsModal(editThresholdsV, 'small');
+
+    }
 
 /*
     generateTs: function () {

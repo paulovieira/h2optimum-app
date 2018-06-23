@@ -1,0 +1,80 @@
+<!-- htmlhint spec-char-escape: false, tag-pair: false  -->
+
+
+<div class="modal-header">
+    <h4 class="modal-title" style="font-weight: 300;">
+        Edit thresholds
+    </h4>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12">
+
+
+            <label >Saturated soil</label>
+            <form class="form-inline">
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" value="0" disabled />
+                </div>
+
+                <label> &mdash;&nbsp; </label>
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" name="threshold1" value="{{ threshold1 }}"  />
+                </div>
+
+            </form>
+
+
+            <label >Soil is adequately wet</label>
+            <form class="form-inline">
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" name="threshold1" value="{{ threshold1 }}" />
+                </div>
+
+                <label> &mdash;&nbsp; </label>
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" name="threshold2" value="{{ threshold2 }}"  />
+                </div>
+
+            </form>
+
+            <label >Usual range for irrigation</label>
+            <form class="form-inline">
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" name="threshold2" value="{{ threshold2 }}" />
+                </div>
+
+                <label> &mdash;&nbsp; </label>
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" name="threshold3" value="{{ threshold3 }}"  />
+                </div>
+
+            </form>
+
+            <label >Soil is dry above</label>
+            <form class="form-inline">
+
+                <div class="form-group">
+                    <input type="text" class="form-control input-threshold" name="threshold3" value="{{ threshold3 }}" />
+                </div>
+
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-bold btn-secondary" data-id="close">Close</button>
+    <button type="button" class="btn btn-bold btn-info" data-id="save">Save</button>
+</div>
+

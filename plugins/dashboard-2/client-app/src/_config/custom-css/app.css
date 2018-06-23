@@ -147,3 +147,10 @@ a:hover, a:focus {
 .card-controls li > a:hover {
   color: #48b0f7;  /* use the 'info' color */
 }
+
+
+/* width for inputs in the edit threshold screen */
+
+.input-threshold {
+  width: 80px !important;
+}
