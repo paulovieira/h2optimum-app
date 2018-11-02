@@ -15,9 +15,9 @@ let View = Mn.View.extend({
 
         this.model = new Backbone.Model();
         this.model.set({
-            threshold1: 0,
-            threshold2: 0,
-            threshold3: 0,
+            threshold1: 10,
+            threshold2: 60,
+            threshold3: 100,
         })
     },
 
