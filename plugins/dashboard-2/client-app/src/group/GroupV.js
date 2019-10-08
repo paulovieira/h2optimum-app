@@ -189,7 +189,11 @@ debugger
 
     computeWPQuadratic: function (resistance, temp){
 
-        if (resistance > 40000 || resistance < 0) {
+        // if (resistance > 40000 || resistance < 0) {
+        //     return null;
+        // }
+
+        if (resistance < 0) {
             return null;
         }
 
