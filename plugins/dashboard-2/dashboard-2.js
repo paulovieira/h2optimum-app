@@ -117,10 +117,10 @@ exports.register = function(server, options, next){
             }
 
             let templateFile = 'templates/dashboard-2.html';
-            let { maxResistance } = request.query;
+            //let { maxResistance } = request.query;
             let ctx = {
                 isProduction: !!Config.get('production'),
-                maxResistance
+                //maxResistance
             };
 
             reply.view(templateFile, {

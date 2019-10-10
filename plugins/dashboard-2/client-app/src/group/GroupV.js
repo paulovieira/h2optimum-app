@@ -190,7 +190,7 @@ debugger
     computeWPQuadratic: function (resistance, temp){
 
         let maxResistance = window.h2optimum.maxResistance || 100000;
-        debugger;
+
         if (resistance > maxResistance || resistance < 0) {
             return null;
         }
