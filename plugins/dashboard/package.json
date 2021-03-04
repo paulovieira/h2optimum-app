@@ -21,7 +21,7 @@
     "font-awesome": "^4.7.0",
     "ify-loader": "^1.1.0",
     "imports-loader": "^0.8.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "json-markup": "^1.1.0",
     "leaflet": "^1.2.0",
     "plotly.js": "^1.36.1",
