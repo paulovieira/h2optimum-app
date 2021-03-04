@@ -34,6 +34,20 @@ let View = Mn.View.extend({
     regions: {
     },
 
+    templateContext: function() {
+
+        let isRestricted = false;
+        let qs = new URLSearchParams(window.location.search);
+
+        if (qs.get('user') && qs.get('user').startsWith('fculresta')) {
+            isRestricted = true;
+        }
+
+        return {
+            isRestricted
+        }
+    },
+    
     onRender: function () {
         
     },

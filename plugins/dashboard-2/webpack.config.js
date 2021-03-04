@@ -269,6 +269,10 @@ function getConfig(isProduction) {
                                         
                                         // loaded with the raw-loader; check module.rules in webpack config;
                                         var __templateSrc = require(__filename.replace('js', 'html'));
+
+                                        if (typeof __templateSrc !== 'string') {
+                                            __templateSrc = __templateSrc.default;    
+                                        }
                                         
                                         module.exports.prototype.template = __Nunjucks.compile(__templateSrc, __env, null, true);
                                         

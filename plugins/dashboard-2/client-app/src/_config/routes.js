@@ -64,24 +64,36 @@ exports.group = {
             view: require('../group/GroupV'),
             region: 'for-main-container',
             handler: function(viewClass, viewOptions){
-//debugger
-                var requestData = viewOptions.request;
-                viewOptions.request._ts = Date.now();
-                var data = Radio.channel('public').request('installations');
-                var dataFiltered = data.filter(obj => obj.slug === requestData.params.installationSlug)
 
-                if (dataFiltered.length === 0) {
-                    alert(`the installation ${ requestData.params.installationSlug } does not exist`);
-                    return false;
-                }
+                let p = Promise.resolve(Utils.fetchInstallations())
 
-                var model = new Backbone.Model(dataFiltered[0])
-                viewOptions.model = model;
+                p = p.then(() => {
 
-                var viewInstance = new viewClass(viewOptions);
-                viewInstance.render();
+                    var requestData = viewOptions.request;
+                    viewOptions.request._ts = Date.now();
+                    var data = Radio.channel('public').request('installations');
+                    var dataFiltered = data.filter(obj => obj.slug === requestData.params.installationSlug)
 
-                return viewInstance;
+                    if (dataFiltered.length === 0) {
+                        alert(`the installation ${ requestData.params.installationSlug } does not exist`);
+                        return false;
+                    }
+
+                    var model = new Backbone.Model(dataFiltered[0])
+                    viewOptions.model = model;
+
+                    var viewInstance = new viewClass(viewOptions);
+                    viewInstance.render();
+                    
+                    let out = {
+                        view: viewInstance
+                    }
+
+                    return out;
+                })
+
+                return p;
+
             },
             children: [
             {
@@ -160,7 +172,7 @@ exports.empty = {
 
     path: '',
     validate: function(request) {
-//debugger
+//debugger;
         setTimeout(() => { global.location.hash = '/dashboard' }, 0);
         return false;
     }
@@ -170,7 +182,7 @@ exports.emptyWithSlash = {
 
     path: '/',
     validate: function(request) {
-//debugger
+//debugger;
         setTimeout(() => { global.location.hash = '#/dashboard' }, 0);
         return false;
     }
@@ -183,7 +195,7 @@ exports.catchAll = {
 
     path: '*any',
     validate: function(request) {
-//debugger
+//debugger;
         alert('Invalid page. You will be redirected to the welcome screen');
 
         setTimeout(() => { global.location.hash = '#/dashboard' }, 0);

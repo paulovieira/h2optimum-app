@@ -10,26 +10,6 @@ let Utils = require('_common/utils')
 
 let internals = {};
 
-internals.cropTypes = {
-    'crop_corn': 'corn description',
-    'crop_fruits': 'fruits description',
-    'crop_wheat': 'wheat description',
-    'crop_grapes': 'grapes description',
-    'crop_type_x': 'crop type X description',
-    'crop_type_y': 'crop type Y description',
-    'crop_type_z': 'crop type Z description',
-};
-
-internals.soilTypes = {
-    'loamy_sand': 'loamy_sand',
-    'fine_sandy_loam': 'fine_sandy_loam',
-    'sandy_loam': 'sandy_loam',
-    'loam': 'loam',
-    'clay': 'clay',
-};
-
-
-
 let View = Mn.View.extend({
 
     // important: the root element of the first child view inside the 'main-container' region must be a main.main-container
@@ -64,7 +44,7 @@ let View = Mn.View.extend({
 
     fetchAndRender: function(){
 
-        this.fetchData()
+        Utils.fetchInstallations()
             .then(() => { this.render() })
 
     },
@@ -132,74 +112,24 @@ let View = Mn.View.extend({
             this.showChildView(`card-${ controllerIndex }`, controllerCardV);
         }
 
+        // redirect for fculresta
+
+        let qs = new URLSearchParams(window.location.search);
+
+        if (qs.get('user') && qs.get('user').startsWith('fculresta')) {
+            setTimeout(this.redirectToTheFirstInstallation, 0);    
+        }
+
     },
 
-    fetchData: function () {
+    redirectToTheFirstInstallation: function() {
 
-        let p = Q($.ajax({
-            url: '/api/get-installations',
-            type: 'GET',
-            data: {},
-        }));
+        let data = Radio.channel('public').request('installations');
 
+        
+        if (data && data.length === 0) { return }
 
-    /*
-            active:         true
-                cropTypeCode:         "crop_corn"
-                description:         "desc"
-                id:         5
-                location:         {}
-                name:         "my installation xyz"
-                slug:         "my-installation-xyz-442f"
-                soilTypeCode:         "soil_loam"
-            userId:         2
-    */
-
-    /*
-            // the type of controller (or "group controller") can be "switch", "sensor", "mixed" or "new"
-            let dummyInstallations = [
-                {
-                        id: 1,
-                    type: 'switch',
-                        slug: 'permalab',
-                        name: 'Permalab',
-                        description: '&nbsp;',
-                    statusCode: 1,
-                    statusMessage: 'on',
-                    statusMessage2: '(4h23m to finish)',
-                    diagnosticCode: 0,
-                    diagnosticMessage: 'ok',
-                    diagnosticMessage2: 'wefgwe fwef we fwefiowen fiowen fiownefoi weiofnwioe fniowe nfiown fiowfeiow ofi wof wiof owifw nio',
-                    center: [51.505, -0.09],
-                        soilTypeCode: 'soil_sandy_loam',
-                        cropTypeCode: 'crop_corn'
-
-                },
-            ];
-    */
-
-
-        p = p.then(installations => {
-            
-            installations.forEach(obj => {
-
-                obj.cropTypeDesc = internals.cropTypes[obj.cropTypeCode];
-                obj.soilTypeDesc = internals.soilTypes[obj.soilTypeCode];
-            })
-
-
-            // TODO: location is location
-            installations.forEach(obj => { obj.location = [51.505, -0.09] })
-
-            Radio.channel('public').reply('installations', installations);
-
-
-        })
-
-//        p = p.done(undefined, err => { debugger; throw err });
-
-        return p;
-
+        global.location.hash = `#/groups/${data[0].slug}`;
     },
 
     addNewInstallation: function(ev){

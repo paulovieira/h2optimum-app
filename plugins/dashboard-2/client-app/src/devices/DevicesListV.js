@@ -129,8 +129,13 @@ let View = Mn.View.extend({
     fetchData: function() {
 
         let data = {
-            installationId: this.model.get('installationId')
+            installationId: this.model.get('installationId'),
         };
+
+        let qs = new URLSearchParams(window.location.search);
+        if (qs.get('user') && qs.get('user').startsWith('fculresta')) {
+            data.user = 'fculresta';
+        }
 
         let p = Q($.ajax({
             url: '/api/get-devices',
@@ -153,7 +158,7 @@ let View = Mn.View.extend({
         })
         
         p = p.catch(err => {
-            debugger
+            //debugger
             // TODO: what errors can happen here?
             alert('ERROR')            
         })

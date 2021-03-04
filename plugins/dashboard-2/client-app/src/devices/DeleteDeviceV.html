@@ -1,3 +1,4 @@
+<!-- htmlhint spec-char-escape: false, tag-pair: false  -->
 
 <div class="modal-header">
     <h4 class="modal-title">
@@ -17,6 +18,10 @@
 
 <div class="modal-footer">
     <button type="button" class="btn btn-bold btn-secondary" data-id="close">Cancel</button>
-    <button type="button" class="btn btn-bold btn-danger" data-id="save">Yes, Delete</button>
+    <button type="button" class="btn btn-bold btn-danger" data-id="save" 
+        {{"disabled" if isRestricted}} 
+        {{"title='This action is disabled.'" if isRestricted}} 
+        style="{{'cursor: not-allowed;' if isRestricted}}"
+    >Yes, Delete</button>
 </div>
 

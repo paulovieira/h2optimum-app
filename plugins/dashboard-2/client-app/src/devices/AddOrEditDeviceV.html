@@ -54,7 +54,11 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-bold btn-secondary" data-id="close">Close</button>
-    <button type="button" class="btn btn-bold btn-info" data-id="save">Save</button>
+    <button type="button" class="btn btn-bold btn-secondary" data-id="close" >Close</button>
+    <button type="button" class="btn btn-bold btn-info" data-id="save" 
+        {{"disabled" if isRestricted}}
+        {{"title='This action is disabled.'" if isRestricted}}
+        style="{{'cursor: not-allowed;' if isRestricted}}" 
+    >Save</button>
 </div>
 

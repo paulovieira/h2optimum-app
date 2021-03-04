@@ -74,13 +74,13 @@ const manifest = {
         // https://github.com/hapijs/good/tree/v7.3.0
         // https://github.com/hapijs/good-console/tree/v6.4.1
         // https://github.com/hapijs/good-squeeze/tree/v5.0.2
-        {
-            plugin: {
-                register: 'good',
-                options: Config.get('plugins:good')
-            },
-            options: {}
-        },
+        // {
+        //     plugin: {
+        //         register: 'good',
+        //         options: Config.get('plugins:good')
+        //     },
+        //     options: {}
+        // },
 
 
         // https://github.com/danielb2/blipp/tree/v2.3.0
@@ -161,13 +161,13 @@ const manifest = {
         },
 
         // dependencies: ['vision', 'inert', 'hapi-auth-cookie-cache']
-        {
-            plugin: {
-                register: './plugins/dashboard/dashboard.js',
-                options: {}
-            },
-            options: {}
-        },
+        // {
+        //     plugin: {
+        //         register: './plugins/dashboard/dashboard.js',
+        //         options: {}
+        //     },
+        //     options: {}
+        // },
         {
             plugin: {
                 register: './plugins/dashboard-2/dashboard-2.js',
