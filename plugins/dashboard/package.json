@@ -9,7 +9,7 @@
     "bell-on-bundler-error-plugin": "^2.0.0",
     "billboard.js": "^1.2.0",
     "bootstrap": "4.0.0-beta.2",
-    "bootstrap-select": "1.12.4",
+    "bootstrap-select": "1.13.6",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.9",
     "d3": "^4.10.2",
