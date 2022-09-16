@@ -7,7 +7,7 @@
     "backbone.radio": "^2.0.0",
     "backbone.syphon": "^0.7.0",
     "bell-on-bundler-error-plugin": "^2.0.0",
-    "bootstrap": "^4.1.0",
+    "bootstrap": "^4.3.1",
     "bootstrap-select": "1.12.4",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.9",
