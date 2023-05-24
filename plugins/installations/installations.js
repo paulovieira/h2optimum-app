@@ -54,82 +54,6 @@ exports.register = function (server, options, next){
                 strategy: 'cookie-cache',
                 mode: 'try'
             }
-            /*
-            validate: {
-
-                query: {
-                    //userId: Joi.number().integer().required()
-                },
-
-                options: {
-                    stripUnknown: true
-                }
-            }
-            */
-
-        },
-
-        handler: function (request, reply) {
-
-            //console.log('request.auth', request.auth)
-            console.log('request.query', request.query)
-
-            if (Config.get('auth') === 'false') {
-                request.auth.credentials = { id: 1 }
-            }
-            else if (request.query.user && request.query.user.startsWith('fculresta')) {
-                request.auth.credentials = { id: 7 }
-            }
-            else {
-                if (!request.auth.isAuthenticated) {
-
-                    if (request.query.user_id) {
-                        request.auth.credentials = { id: request.query.user_id }
-                    }
-                    else {
-
-                        // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
-                        if (request.auth.artifacts && request.auth.artifacts.uuid) {
-                            return reply(Boom.unauthorized('Your session has expired. Please login again.'));
-                        }
-                        else {
-                            return reply(Boom.unauthorized('Please login first'));
-                        }                        
-                    }
-
-                }                
-            }
-
-            // original request options
-            console.log(request.query);
-
-            // add userId from the cookie data
-            let dbOptions = request.query;
-            dbOptions.userId = request.auth.credentials.id;
-            console.log(dbOptions);
-
-            Db.query(`select * from read_installations(' ${ JSON.stringify(dbOptions) } ')`)
-                .then(function (result){
-
-                    return reply(Hoek.transform(result, internals.DBtoAPI));
-                })
-                .catch(function (err){
-                    
-                    Utils.logErr(err, ['installations']);
-                    return reply(err);
-                });
-        }
-    });
-
-
-    server.route({
-        path: '/api/get-installations-cors',
-        method: 'GET',
-        config: {
-            auth: {
-                strategy: 'cookie-cache',
-                mode: 'try'
-            },
             cors: {
                 origin: ['*']
             }
@@ -199,6 +123,8 @@ exports.register = function (server, options, next){
                 });
         }
     });
+
+
     /*
 
     H2OPTIMUM_HOST=localhost

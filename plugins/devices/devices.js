@@ -53,6 +53,9 @@ exports.register = function (server, options, next){
                 strategy: 'cookie-cache',
                 mode: 'try'
             },
+            cors: {
+                origin: ['*']
+            },
             validate: {
 
                 query: {
@@ -79,13 +82,20 @@ exports.register = function (server, options, next){
             else {
                 if (!request.auth.isAuthenticated) {
 
-                    // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
-                    if (request.auth.artifacts && request.auth.artifacts.uuid) {
-                        return reply(Boom.unauthorized('Your session has expired. Please login again.'));
+
+                    if (request.query.user_id) {
+                        request.auth.credentials = { id: request.query.user_id }
                     }
                     else {
-                        return reply(Boom.unauthorized('Please login first'));
+                        // check special case - expired session (happens when isAuthenticated is false and we have request.auth.artifacts)
+                        if (request.auth.artifacts && request.auth.artifacts.uuid) {
+                            return reply(Boom.unauthorized('Your session has expired. Please login again.'));
+                        }
+                        else {
+                            return reply(Boom.unauthorized('Please login first'));
+                        }                        
                     }
+
                 }                
             }
 
