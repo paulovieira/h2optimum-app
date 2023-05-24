@@ -53,7 +53,7 @@ exports.register = function (server, options, next){
             auth: {
                 strategy: 'cookie-cache',
                 mode: 'try'
-            }
+            },
             cors: {
                 origin: ['*']
             }
