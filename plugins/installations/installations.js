@@ -45,6 +45,51 @@ internals.DBtoAPI = _.invert(internals.APItoDB);
 
 exports.register = function (server, options, next){
 
+    server.route({
+        path: '/api/who',
+        method: 'GET',
+        config: {
+            auth: false,
+            cors: {
+                origin: ['*']
+            }
+            /*
+            validate: {
+
+                query: {
+                    //userId: Joi.number().integer().required()
+                },
+
+                options: {
+                    stripUnknown: true
+                }
+            }
+            */
+
+        },
+
+        handler: async function (request, reply) {
+
+            let now = Date.now();
+
+            let out = {};
+            if (now % 3 === 0) {
+                out.isAuthenticated = true;
+                out.artifacts = {username:"info@2adapt.pt", isAdmin :true};
+            }
+            else if (now % 3 === 1) {
+                out.isAuthenticated = true;
+                out.artifacts = {username:"xyz@abc.pt", isAdmin :false};
+            }
+            else {
+                out.isAuthenticated = false;
+                out.artifacts = null;
+            }
+
+            return reply(out);
+        }
+    });
+
     // 1 - read installations
 
     server.route({
