@@ -38,6 +38,7 @@ internals.APItoDB = {
     'timezone': 'timezone',
     'location': 'location',
     'active': 'active',
+    'devices': 'devices',
 };
 
 internals.DBtoAPI = _.invert(internals.APItoDB);
@@ -72,7 +73,7 @@ exports.register = function (server, options, next){
 
         },
 
-        handler: function (request, reply) {
+        handler: async function (request, reply) {
 
             //console.log('request.auth', request.auth)
             console.log('request.query', request.query)
@@ -111,8 +112,18 @@ exports.register = function (server, options, next){
             dbOptions.userId = request.auth.credentials.id;
             console.log(dbOptions);
 
+
             Db.query(`select * from read_installations(' ${ JSON.stringify(dbOptions) } ')`)
-                .then(function (result){
+                .then(async function (result){
+
+                    console.log({ result })
+                    for(let obj of result) {
+                        console.log({ obj })
+                        let result = await Db.query(`select * from read_devices(' ${ JSON.stringify({ userId: dbOptions.userId, installationId: obj.id }) } ')`)
+                        obj.devices = result;
+                    }
+
+
 
                     return reply(Hoek.transform(result, internals.DBtoAPI));
                 })
