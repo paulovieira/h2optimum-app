@@ -131,7 +131,7 @@ exports.register = function (server, options, next){
                 mode: 'try'
             },
             cors: {
-                origin: '*'
+                origin: ['*']
             }
             /*
             validate: {
